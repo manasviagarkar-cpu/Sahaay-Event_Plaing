@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sahaay — AI-powered celebration operations assistant for Indian weddings, birthdays, festivals, and community events. Plan smarter, handle the chaos." />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self'; connect-src 'self'" />
+  <meta name="theme-color" content="#641C32" />
+  <meta property="og:title" content="Sahaay — Plan the Celebration. Control the Chaos." />
+  <meta property="og:description" content="AI-powered celebration operations assistant for Indian weddings, birthdays, festivals, and community events." />
+  <title>Sahaay — Plan the Celebration. Control the Chaos.</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ─── Skip Navigation Link ─────────────────────────────────── -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- ─── Onboarding Screen ─────────────────────────────────── -->
+<div id="onboarding-screen">
+  <div class="onboarding-bg-decor" aria-hidden="true">
+    <svg width="100%" height="100%" style="position:absolute;top:0;left:0;opacity:0.04">
+      <pattern id="bp" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+        <circle cx="30" cy="30" r="1.5" fill="#641C32"/>
+        <circle cx="0" cy="0" r="1" fill="#641C32"/>
+        <circle cx="60" cy="0" r="1" fill="#641C32"/>
+        <circle cx="0" cy="60" r="1" fill="#641C32"/>
+        <circle cx="60" cy="60" r="1" fill="#641C32"/>
+      </pattern>
+      <rect width="100%" height="100%" fill="url(#bp)"/>
+    </svg>
+    <!-- Decorative circles -->
+    <div style="position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(232,137,50,0.12),transparent 70%);pointer-events:none"></div>
+    <div style="position:absolute;bottom:-60px;left:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(100,28,50,0.10),transparent 70%);pointer-events:none"></div>
+  </div>
+
+  <div class="onboarding-card">
+    <span class="onboarding-logo">Sahaay</span>
+    <span class="onboarding-tagline">Plan the Celebration. Control the Chaos.</span>
+
+    <div class="onboarding-divider"></div>
+
+    <h2 style="font-size:1.15rem;font-weight:700;color:var(--maroon);margin-bottom:20px;">Let's make your celebration easier.</h2>
+
+    <form id="onboarding-form" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="ob-event-name">Event name <span class="required">*</span></label>
+          <input type="text" id="ob-event-name" class="form-control" placeholder="e.g. Priya & Dev Wedding" required />
+          <div class="form-error" id="err-event-name">Please enter an event name.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ob-event-type">Event type <span class="required">*</span></label>
+          <select id="ob-event-type" class="form-control" required>
+            <option value="">Select type…</option>
+            <option value="Wedding">Wedding</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Festival">Festival</option>
+            <option value="Community event">Community event</option>
+            <option value="Other">Other</option>
+          </select>
+          <div class="form-error" id="err-event-type">Please select an event type.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="ob-date">Event date <span class="required">*</span></label>
+          <input type="date" id="ob-date" class="form-control" required />
+          <div class="form-error" id="err-date">Please select a date in the future.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ob-city">City <span class="required">*</span></label>
+          <input type="text" id="ob-city" class="form-control" placeholder="e.g. Lucknow" required />
+          <div class="form-error" id="err-city">Please enter a city.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="ob-guests">Guest count <span class="required">*</span></label>
+          <input type="number" id="ob-guests" class="form-control" placeholder="e.g. 120" min="1" max="10000" required />
+          <div class="form-error" id="err-guests">Please enter a valid guest count (1–10000).</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ob-budget">Total budget (₹) <span class="required">*</span></label>
+          <input type="number" id="ob-budget" class="form-control" placeholder="e.g. 200000" min="1000" required />
+          <div class="form-error" id="err-budget">Please enter a valid budget (min ₹1000).</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="ob-food">Food preference</label>
+          <select id="ob-food" class="form-control">
+            <option value="Vegetarian">Vegetarian</option>
+            <option value="Non-vegetarian">Non-vegetarian</option>
+            <option value="Vegan">Vegan</option>
+            <option value="Mixed">Mixed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ob-language">Preferred language</label>
+          <select id="ob-language" class="form-control">
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Hinglish">Hinglish</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Accessibility requirements</label>
+        <div class="checkbox-group" id="ob-accessibility">
+          <label class="checkbox-item" tabindex="0">
+            <input type="checkbox" value="Elderly seating" /> Elderly seating
+          </label>
+          <label class="checkbox-item" tabindex="0">
+            <input type="checkbox" value="Wheelchair access" /> Wheelchair access
+          </label>
+          <label class="checkbox-item" tabindex="0">
+            <input type="checkbox" value="Quiet area" /> Quiet area
+          </label>
+          <label class="checkbox-item" tabindex="0">
+            <input type="checkbox" value="Medical support" /> Medical support
+          </label>
+          <label class="checkbox-item" tabindex="0">
+            <input type="checkbox" value="None" id="ob-access-none" /> None
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="ob-volunteers">Number of volunteers</label>
+        <input type="number" id="ob-volunteers" class="form-control" placeholder="e.g. 10" min="0" max="1000" value="5" />
+      </div>
+
+      <div class="onboarding-actions">
+        <button type="submit" class="btn btn-primary btn-lg" id="ob-submit-btn" style="flex:1">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l5 5L20 7"/></svg>
+          Create My Event Plan
+        </button>
+      </div>
+    </form>
+
+    <div class="onboarding-demo">
+      <span>Want to explore first?</span>
+      <button id="ob-demo-btn" type="button">Load Demo Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Main App ──────────────────────────────────────────── -->
+<div id="app" style="display:none">
+
+  <!-- Sidebar overlay (mobile) -->
+  <div id="sidebar-overlay" role="button" aria-label="Close menu"></div>
+
+  <!-- Sidebar -->
+  <nav id="sidebar" role="navigation" aria-label="Main navigation">
+    <div class="sidebar-logo">
+      <span class="logo-text">Sahaay</span>
+      <span class="logo-tagline">Celebration Command</span>
+    </div>
+    <div class="sidebar-event-info">
+      <span class="sidebar-event-name" id="sidebar-event-name">—</span>
+      <span class="sidebar-event-date" id="sidebar-event-date">—</span>
+    </div>
+    <ul class="sidebar-nav" role="list">
+      <li>
+        <button class="nav-item active" id="nav-dashboard" data-view="dashboard" aria-current="page" aria-label="Overview dashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Overview
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" id="nav-budget" data-view="budget" aria-label="Budget command center">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 6v2m0 8v2M8.5 9.5a3.5 1.5 0 017 0v5a3.5 1.5 0 01-7 0"/></svg>
+          Budget
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" id="nav-tasks" data-view="tasks" aria-label="Responsibility board">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          Responsibilities
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" id="nav-timeline" data-view="timeline" aria-label="Timeline and countdown">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Timeline
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" id="nav-vendors" data-view="vendors" aria-label="Vendor checklist">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+          Vendors
+        </button>
+      </li>
+      <li>
+        <button class="nav-item crisis-nav" id="nav-crisis" data-view="crisis" aria-label="Crisis switch emergency mode">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Crisis Switch
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" id="nav-messages" data-view="messages" aria-label="Message studio">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Message Studio
+        </button>
+      </li>
+      <li>
+        <button class="nav-item" id="nav-settings" data-view="settings" aria-label="Settings">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Settings
+        </button>
+      </li>
+    </ul>
+    <div class="sidebar-bottom">
+      <div class="ai-mode-badge">
+        <div class="ai-mode-dot"></div>
+        <span>Demo AI mode — no key required</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div id="main-content">
+
+    <!-- Top bar -->
+    <header id="topbar" role="banner">
+      <button id="menu-toggle" style="display:none;border:none;background:none;padding:6px;cursor:pointer;border-radius:6px;margin-right:8px" aria-label="Open menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="topbar-event-name" id="topbar-event-name">My Event</span>
+      <div class="topbar-meta">
+        <span class="topbar-days" id="topbar-days"><span id="days-count">—</span> days to go</span>
+        <select class="topbar-lang-select" id="topbar-lang" aria-label="Select language">
+          <option value="English">EN</option>
+          <option value="Hindi">HI</option>
+          <option value="Hinglish">HIN</option>
+        </select>
+        <div class="topbar-notif" id="notif-btn" role="button" aria-label="Notifications" tabindex="0" style="position:relative">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <div class="notif-dot" id="notif-dot"></div>
+          <div class="notif-panel" id="notif-panel" style="display:none" role="dialog" aria-label="Notifications">
+            <div class="notif-header">Notifications</div>
+            <div id="notif-list"></div>
+          </div>
+        </div>
+        <div class="topbar-avatar" id="topbar-avatar" role="img" aria-label="User profile">U</div>
+      </div>
+    </header>
+
+    <!-- Views -->
+    <main id="views-container" role="main" aria-label="Application views">
+
+      <!-- ── Overview Dashboard ── -->
+      <section class="view active" id="view-dashboard" aria-labelledby="dashboard-heading" aria-label="Overview Dashboard">
+        <div class="page-content">
+          <div class="dashboard-hero-card mb-3">
+            <div class="dashboard-hero-content">
+              <div class="dashboard-badge-row">
+                <span class="celebration-pill" id="dash-event-type">✨ Celebration Operations</span>
+                <span class="pulse-status-pill"><span class="pulse-indicator"></span><span id="dash-pulse-status">Active Command</span></span>
+              </div>
+              <h1 id="dashboard-heading" aria-live="polite">Good morning, organiser.</h1>
+              <p id="dashboard-sub-text">Here is your live celebration readiness report.</p>
+            </div>
+            <div class="dashboard-quick-actions">
+              <button class="btn btn-ghost btn-sm" id="dash-quick-expense" onclick="openAddExpenseModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                + Expense
+              </button>
+              <button class="btn btn-primary btn-sm" id="dash-quick-task" onclick="openAddTaskModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                + Task
+              </button>
+            </div>
+          </div>
+
+          <!-- Stat cards -->
+          <div class="grid-4 mb-3" id="stat-cards" aria-live="polite"></div>
+
+          <!-- Today's Focus + Crisis CTA -->
+          <div class="grid-2 mb-3">
+            <div>
+              <div class="d-flex align-center justify-between mb-2">
+                <h2 style="font-size:1.05rem;font-weight:700;color:var(--maroon)">Today's Operational Focus</h2>
+                <button class="btn btn-ghost btn-sm" data-view="tasks" id="dash-view-all-tasks" aria-label="View all tasks">View all</button>
+              </div>
+              <div id="today-focus-list" aria-live="polite"></div>
+            </div>
+            <div>
+              <div class="card crisis-cta-card">
+                <div class="card-title">Operational Safeguard</div>
+                <h3>Something unexpected happened?</h3>
+                <p>Celebrations are dynamic. Sahaay generates instant, realistic rescue plans with action steps and vendor assignments.</p>
+                <button class="btn btn-primary" id="dash-crisis-btn" aria-label="Open Crisis Switch">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  Open Crisis Switch
+                </button>
+              </div>
+              <!-- Event Health -->
+              <div class="card mt-2" id="event-health-card">
+                <div class="d-flex align-center justify-between" style="margin-bottom:14px">
+                  <div class="card-title" style="margin-bottom:0">Event Health Index</div>
+                  <span class="health-overall-badge" id="health-overall-badge">All Systems Nominal</span>
+                </div>
+                <div id="event-health-bars" aria-live="polite"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Budget ── -->
+      <section class="view" id="view-budget" aria-label="Budget Command Center">
+        <div class="page-content">
+          <div class="page-header d-flex align-center justify-between">
+            <div>
+              <h1 class="page-title">Budget Command Center</h1>
+              <p class="page-subtitle">Track every rupee. Know exactly where you stand.</p>
+            </div>
+            <button class="btn btn-primary" id="add-expense-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Expense
+            </button>
+          </div>
+
+          <!-- Budget Overview -->
+          <div class="card mb-3" id="budget-overview-card">
+            <div class="budget-overview" id="budget-stats-grid"></div>
+            <div style="margin-top:16px">
+              <div class="d-flex justify-between text-small text-muted mb-1">
+                <span>Budget breakdown</span>
+                <span id="budget-bar-legend"></span>
+              </div>
+              <div class="budget-visual-bar" id="budget-visual-bar"></div>
+            </div>
+          </div>
+
+          <!-- Category summary -->
+          <div class="card mb-3" id="category-summary-card">
+            <div class="d-flex align-center justify-between mb-2">
+              <h3 style="font-size:0.95rem;font-weight:700;color:var(--ink)">By Category</h3>
+            </div>
+            <div id="category-summary-list"></div>
+          </div>
+
+          <!-- Expense table -->
+          <div class="card mb-3">
+            <div class="d-flex align-center justify-between mb-2">
+              <h3 style="font-size:0.95rem;font-weight:700;color:var(--ink)">All Expenses</h3>
+              <div class="filter-bar" style="margin-bottom:0">
+                <button class="filter-btn active" data-expense-filter="all">All</button>
+                <button class="filter-btn" data-expense-filter="paid">Paid</button>
+                <button class="filter-btn" data-expense-filter="promised">Promised</button>
+                <button class="filter-btn" data-expense-filter="pending">Pending</button>
+              </div>
+            </div>
+            <div id="expense-table-wrap"></div>
+          </div>
+
+          <!-- What-if calculator -->
+          <div class="whatif-box mb-3">
+            <h3 style="font-size:0.95rem;font-weight:700;color:var(--maroon);margin-bottom:4px">🧮 "What if?" Calculator</h3>
+            <p class="text-small text-muted mb-2">Simulate changes to your plan before committing.</p>
+            <div class="form-row">
+              <div class="form-group mb-1">
+                <label class="form-label" for="wi-guests">Add extra guests</label>
+                <input type="number" id="wi-guests" class="form-control" placeholder="e.g. 20" min="0" />
+              </div>
+              <div class="form-group mb-1">
+                <label class="form-label" for="wi-expense">Unexpected expense (₹)</label>
+                <input type="number" id="wi-expense" class="form-control" placeholder="e.g. 5000" min="0" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group mb-1">
+                <label class="form-label" for="wi-budget-cut">Budget reduction (₹)</label>
+                <input type="number" id="wi-budget-cut" class="form-control" placeholder="e.g. 10000" min="0" />
+              </div>
+              <div class="form-group mb-1" style="display:flex;align-items:flex-end">
+                <button class="btn btn-maroon w-100" id="wi-simulate-btn">Simulate Impact</button>
+              </div>
+            </div>
+            <div id="wi-result" style="display:none"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Responsibilities / Tasks ── -->
+      <section class="view" id="view-tasks" aria-label="Responsibility Board">
+        <div class="page-content">
+          <div class="page-header d-flex align-center justify-between flex-wrap gap-1">
+            <div>
+              <h1 class="page-title">Responsibility Board</h1>
+              <p class="page-subtitle">Who does what, by when.</p>
+            </div>
+            <button class="btn btn-primary" id="add-task-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Task
+            </button>
+          </div>
+
+          <div class="filter-bar" id="task-filter-bar">
+            <button class="filter-btn active" data-task-filter="all">All</button>
+            <button class="filter-btn" data-task-filter="urgent">Urgent</button>
+            <button class="filter-btn" data-task-filter="pending">Pending</button>
+            <button class="filter-btn" data-task-filter="completed">Completed</button>
+          </div>
+
+          <div class="grid-auto mb-3" id="tasks-grid"></div>
+
+          <!-- Extract tasks from text -->
+          <div class="extract-box">
+            <h3 style="font-size:0.93rem;font-weight:700;color:var(--maroon);margin-bottom:4px">
+              ✨ Convert message into tasks
+            </h3>
+            <p class="text-small text-muted mb-2">Paste a message and Sahaay will extract tasks automatically.</p>
+            <textarea id="extract-input" class="form-control mb-1" rows="3" placeholder='e.g. "Riya can collect flowers before 3 PM. Aman should confirm the caterer. Neha will arrange transport for elderly guests."'></textarea>
+            <button class="btn btn-maroon btn-sm" id="extract-tasks-btn">Extract Tasks</button>
+            <div id="extract-preview" style="display:none;margin-top:14px"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Timeline ── -->
+      <section class="view" id="view-timeline" aria-label="Timeline and Countdown">
+        <div class="page-content">
+          <div class="page-header">
+            <h1 class="page-title">Timeline & Countdown</h1>
+            <p class="page-subtitle">Everything in order, every step of the way.</p>
+          </div>
+
+          <div class="grid-2 mb-3">
+            <div class="card countdown-card" aria-label="Celebration countdown">
+              <div class="countdown-badge-wrap">
+                <span class="countdown-header-badge" id="cd-badge">Auspicious Countdown</span>
+              </div>
+              <h3 id="cd-title">Time Until Celebration</h3>
+              <div class="countdown-digits" id="countdown-display" aria-live="off">
+                <div class="countdown-unit"><span class="countdown-number" id="cd-days">00</span><span class="countdown-label">Days</span></div>
+                <span class="countdown-sep" aria-hidden="true">:</span>
+                <div class="countdown-unit"><span class="countdown-number" id="cd-hours">00</span><span class="countdown-label">Hours</span></div>
+                <span class="countdown-sep" aria-hidden="true">:</span>
+                <div class="countdown-unit"><span class="countdown-number" id="cd-mins">00</span><span class="countdown-label">Mins</span></div>
+                <span class="countdown-sep" aria-hidden="true">:</span>
+                <div class="countdown-unit"><span class="countdown-number" id="cd-secs">00</span><span class="countdown-label">Secs</span></div>
+              </div>
+              <div class="countdown-status-badge" id="cd-status-badge">Preparations in full swing</div>
+            </div>
+            <div class="card" style="padding:18px">
+              <div class="d-flex align-center justify-between mb-2">
+                <h3 style="font-size:0.93rem;font-weight:700">Add Timeline Item</h3>
+              </div>
+              <div class="form-group mb-1">
+                <label class="form-label" for="tl-task">Task</label>
+                <input type="text" id="tl-task" class="form-control" placeholder="e.g. Final vendor call" />
+              </div>
+              <div class="form-row">
+                <div class="form-group mb-1">
+                  <label class="form-label" for="tl-phase">Phase</label>
+                  <select id="tl-phase" class="form-control">
+                    <option value="30 days before">30 days before</option>
+                    <option value="14 days before">14 days before</option>
+                    <option value="7 days before">7 days before</option>
+                    <option value="3 days before">3 days before</option>
+                    <option value="1 day before">1 day before</option>
+                    <option value="Event day">Event day</option>
+                    <option value="After event">After event</option>
+                  </select>
+                </div>
+                <div class="form-group mb-1">
+                  <label class="form-label" for="tl-owner">Owner</label>
+                  <input type="text" id="tl-owner" class="form-control" placeholder="e.g. Aman" />
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" id="add-timeline-btn">Add Item</button>
+            </div>
+          </div>
+
+          <div id="timeline-phases"></div>
+        </div>
+      </section>
+
+      <!-- ── Vendors ── -->
+      <section class="view" id="view-vendors" aria-label="Vendor Checklist">
+        <div class="page-content">
+          <div class="page-header d-flex align-center justify-between">
+            <div>
+              <h1 class="page-title">Vendor Checklist</h1>
+              <p class="page-subtitle">Every vendor, every confirmation, every payment — tracked.</p>
+            </div>
+            <button class="btn btn-primary" id="add-vendor-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Vendor
+            </button>
+          </div>
+
+          <!-- Vendor summary -->
+          <div class="grid-3 mb-3" id="vendor-summary-grid"></div>
+
+          <div class="grid-auto" id="vendors-grid"></div>
+        </div>
+      </section>
+
+      <!-- ── Crisis Switch ── -->
+      <section class="view" id="view-crisis" aria-label="Crisis Switch">
+        <div class="page-content" style="max-width:900px">
+          <div class="crisis-hero">
+            <h2>Something went wrong? Stay calm. Sahaay has a plan.</h2>
+            <p>Select the crisis, describe what happened, and get a step-by-step rescue plan in seconds.</p>
+          </div>
+
+          <!-- Crisis selector -->
+          <div id="crisis-selector-section">
+            <h3 style="font-size:0.9rem;font-weight:700;color:var(--maroon);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.06em">What happened?</h3>
+            <div class="crisis-grid" id="crisis-grid"></div>
+
+            <div id="crisis-form-wrap" style="display:none" class="card">
+              <h3 style="font-size:1rem;font-weight:700;color:var(--maroon);margin-bottom:16px" id="crisis-form-title">Describe the situation</h3>
+              <div class="form-group">
+                <label class="form-label" for="crisis-description">What exactly happened?</label>
+                <textarea id="crisis-description" class="form-control" rows="3" placeholder="Add any specific details that will help create a better rescue plan…"></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="crisis-urgency">How urgent is it?</label>
+                <select id="crisis-urgency" class="form-control">
+                  <option value="immediate">Immediate — happening right now</option>
+                  <option value="today">Today — needs to be resolved today</option>
+                  <option value="week">This week — some time to plan</option>
+                </select>
+              </div>
+              <div class="d-flex gap-1">
+                <button class="btn btn-danger" id="generate-plan-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                  Generate Rescue Plan
+                </button>
+                <button class="btn btn-ghost btn-sm" id="crisis-cancel-btn">Cancel</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rescue plan output -->
+          <div id="rescue-plan-output" style="display:none" class="rescue-plan" role="region" aria-live="polite" aria-label="Generated rescue plan"></div>
+
+          <!-- Past incidents -->
+          <div class="card mt-3">
+            <div class="d-flex align-center justify-between mb-2">
+              <h3 style="font-size:0.93rem;font-weight:700;color:var(--ink)">Incident Log</h3>
+            </div>
+            <div id="incidents-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Message Studio ── -->
+      <section class="view" id="view-messages" aria-label="Message Studio">
+        <div class="page-content" style="max-width:800px">
+          <div class="page-header">
+            <h1 class="page-title">Message Studio</h1>
+            <p class="page-subtitle">Generate the right message for the right moment.</p>
+          </div>
+
+          <div class="card mb-3">
+            <h3 style="font-size:0.88rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--color-text-muted);margin-bottom:12px">Select message type</h3>
+            <div class="message-type-grid" id="message-type-grid"></div>
+
+            <div class="form-row mt-2">
+              <div class="form-group">
+                <label class="form-label" for="msg-recipient">Recipient name</label>
+                <input type="text" id="msg-recipient" class="form-control" placeholder="e.g. Annapurna Caterers / All Guests" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="msg-tone">Tone</label>
+                <select id="msg-tone" class="form-control">
+                  <option value="warm">Warm</option>
+                  <option value="formal">Formal</option>
+                  <option value="direct">Short and direct</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="msg-language">Language</label>
+                <select id="msg-language" class="form-control">
+                  <option value="English">English</option>
+                  <option value="Hindi">Hindi</option>
+                  <option value="Hinglish">Hinglish</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="msg-details">Important details</label>
+                <input type="text" id="msg-details" class="form-control" placeholder="e.g. 30-minute delay / Role: gate volunteer" />
+              </div>
+            </div>
+
+            <button class="btn btn-primary" id="generate-msg-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 8v4l3 3"/></svg>
+              Generate Message
+            </button>
+          </div>
+
+          <div class="card" id="message-output-card" style="display:none">
+            <div class="d-flex align-center justify-between mb-2">
+              <h3 style="font-size:0.93rem;font-weight:700;color:var(--ink)">Generated Message</h3>
+              <span class="badge badge-normal" style="font-size:0.7rem">Demo AI mode</span>
+            </div>
+            <textarea class="message-output" id="message-output" rows="10" aria-label="Generated message"></textarea>
+            <div class="d-flex gap-1 mt-2 flex-wrap">
+              <button class="btn btn-success btn-sm" id="copy-msg-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                Copy Message
+              </button>
+              <button class="btn btn-ghost btn-sm" id="regen-msg-btn">Regenerate</button>
+              <button class="btn btn-ghost btn-sm" id="clear-msg-btn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Settings ── -->
+      <section class="view" id="view-settings" aria-label="Settings">
+        <div class="page-content" style="max-width:700px">
+          <div class="page-header">
+            <h1 class="page-title">Settings</h1>
+            <p class="page-subtitle">Manage your event data and configuration.</p>
+          </div>
+
+          <div class="settings-section">
+            <h3>Event Information</h3>
+            <div id="settings-event-info"></div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Data Management</h3>
+            <div class="settings-actions">
+              <button class="btn btn-maroon" id="export-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Event Data (JSON)
+              </button>
+              <label class="btn btn-ghost" style="cursor:pointer">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Import Event Data (JSON)
+                <input type="file" id="import-input" accept=".json" style="display:none" />
+              </label>
+              <button class="btn btn-ghost" id="load-demo-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2H3v16h5v4l4-4h5l4-4V2z"/></svg>
+                Load Demo Data
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>AI Integration</h3>
+            <p class="text-small text-muted mb-2">Sahaay works fully in Demo mode without any API key. To connect an optional AI backend for richer responses, implement the <code>callAI()</code> function in <code>app.js</code>.</p>
+            <div style="background:var(--cream);border-radius:var(--radius-md);padding:14px;font-size:0.82rem;color:var(--color-text-muted)">
+              <strong style="color:var(--ink)">Current mode:</strong> Demo AI (fallback templates)<br>
+              <strong style="color:var(--ink)">API key:</strong> Not configured (by design — never store keys in client-side code)<br>
+              <strong style="color:var(--ink)">Fallback:</strong> Always active
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Danger Zone</h3>
+            <div class="settings-actions">
+              <button class="btn btn-danger" id="reset-all-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1,4 1,10 7,10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
+                Reset All Event Data
+              </button>
+            </div>
+            <p class="text-small text-muted mt-1">This will permanently delete all your event data from this browser. This action cannot be undone.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div><!-- /main-content -->
+
+  <!-- Bottom navigation (mobile) -->
+  <nav id="bottom-nav" aria-label="Mobile navigation">
+    <div class="bottom-nav-items">
+      <button class="bottom-nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Overview
+      </button>
+      <button class="bottom-nav-item" data-view="budget">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v2m0 8v2M8.5 9.5a3.5 1.5 0 017 0v5a3.5 1.5 0 01-7 0"/></svg>
+        Budget
+      </button>
+      <button class="bottom-nav-item" data-view="tasks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Tasks
+      </button>
+      <button class="bottom-nav-item crisis" data-view="crisis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Crisis
+      </button>
+      <button class="bottom-nav-item" data-view="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </button>
+    </div>
+  </nav>
+</div><!-- /app -->
+
+<!-- Toast container -->
+<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<!-- Scripts -->
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

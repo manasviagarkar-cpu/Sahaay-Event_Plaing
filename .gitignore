@@ -1,0 +1,24 @@
+# OS and IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Browser artifacts
+*.log
+
+# No node_modules needed — this is a pure HTML/CSS/JS app
+node_modules/
+
+# Environment variables — never commit API keys
+.env
+.env.local
+.env.production
+
+# Build outputs (if you ever add a build step)
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.bak
