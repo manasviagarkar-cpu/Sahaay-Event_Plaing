@@ -16,12 +16,13 @@
 const fs   = require('fs');
 const path = require('path');
 
-const dir  = path.join('c:', 'Users', 'ASUS', 'OneDrive', 'Documents', 'Projects', 'Event');
+const dir = typeof __dirname !== 'undefined' ? __dirname : path.resolve('.');
 
 const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
 const app  = fs.readFileSync(path.join(dir, 'app.js'),    'utf8');
 const data = fs.readFileSync(path.join(dir, 'data.js'),   'utf8');
 const css  = fs.readFileSync(path.join(dir, 'styles.css'),'utf8');
+const serverCode = fs.existsSync(path.join(dir, 'server.js')) ? fs.readFileSync(path.join(dir, 'server.js'), 'utf8') : '';
 
 let passed = 0;
 let failed = 0;
@@ -158,10 +159,18 @@ else fail("'use strict' missing from app.js");
 if (data.includes("'use strict'")) pass("'use strict' present in data.js");
 else fail("'use strict' missing from data.js");
 
+if (serverCode) {
+  if (serverCode.includes("'use strict'")) pass("'use strict' present in server.js");
+  else fail("'use strict' missing from server.js");
+}
+
 // 3b. JSDoc comments present
-const jsdocCount = [...data.matchAll(/\/\*\*[\s\S]*?\*\//g)].length;
-if (jsdocCount >= 5) pass(`${jsdocCount} JSDoc comment blocks in data.js`);
-else warn(`Only ${jsdocCount} JSDoc blocks in data.js — consider adding more documentation`);
+const jsdocDataCount = [...data.matchAll(/\/\*\*[\s\S]*?\*\//g)].length;
+const jsdocAppCount  = [...app.matchAll(/\/\*\*[\s\S]*?\*\//g)].length;
+const totalJsdocs = jsdocDataCount + jsdocAppCount;
+if (totalJsdocs >= 50) pass(`${totalJsdocs} JSDoc comment blocks across codebase (${jsdocAppCount} in app.js, ${jsdocDataCount} in data.js)`);
+else if (jsdocDataCount >= 5) pass(`${jsdocDataCount} JSDoc comment blocks in data.js`);
+else warn(`Only ${totalJsdocs} JSDoc blocks — consider adding more documentation`);
 
 // 3c. No console.log left in production JS (warnings ok)
 const consoleLogs = [...app.matchAll(/console\.log\s*\(/g)].length;

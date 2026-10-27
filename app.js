@@ -243,11 +243,18 @@ function bootApp() {
   }
 }
 
+/**
+ * Display the initial onboarding wizard screen and hide the main application shell.
+ */
 function showOnboarding() {
   document.getElementById('onboarding-screen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
 }
 
+/**
+ * Transition the interface from the onboarding view to the main application shell,
+ * updating header indicators and routing to the requested or default view.
+ */
 function showApp() {
   document.getElementById('onboarding-screen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
@@ -271,6 +278,9 @@ function showApp() {
 }
 
 // ─── Topbar ───────────────────────────────────────────────────
+/**
+ * Refresh topbar UI elements including event name, countdown badge, and language selection dropdown.
+ */
 function updateTopbar() {
   if (!currentEvent) return;
   document.getElementById('topbar-event-name').textContent = currentEvent.name;
@@ -283,6 +293,9 @@ function updateTopbar() {
   document.getElementById('topbar-avatar').textContent = name.charAt(0).toUpperCase();
 }
 
+/**
+ * Update event metadata in desktop and mobile navigation sidebars.
+ */
 function updateSidebarInfo() {
   if (!currentEvent) return;
   document.getElementById('sidebar-event-name').textContent = currentEvent.name;
@@ -292,6 +305,9 @@ function updateSidebarInfo() {
 }
 
 // ─── Dashboard ────────────────────────────────────────────────
+/**
+ * Render all components of the primary command dashboard: greeting, stat counters, urgent focus items, and health scorebars.
+ */
 function renderDashboard() {
   renderGreeting();
   renderStatCards();
@@ -299,6 +315,9 @@ function renderDashboard() {
   renderEventHealth();
 }
 
+/**
+ * Render contextual greeting message based on time of day, event category, location, and guest count.
+ */
 function renderGreeting() {
   const hour = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
@@ -316,6 +335,9 @@ function renderGreeting() {
   }
 }
 
+/**
+ * Calculate and render high-level executive metric cards (budget allocation, tasks remaining, vendor confirmations, countdown).
+ */
 function renderStatCards() {
   const stats = calcBudgetStats(currentEvent, currentExpenses);
   const completedTasks = currentTasks.filter(t => t.status === 'completed').length;
@@ -407,6 +429,9 @@ function renderStatCards() {
   `).join('');
 }
 
+/**
+ * Render high-priority and urgent tasks due imminently in the Today's Focus dashboard card.
+ */
 function renderTodayFocus() {
   const urgent = currentTasks
     .filter(t => t.status !== 'completed' && (t.priority === 'urgent' || t.priority === 'high'))
@@ -443,6 +468,9 @@ function renderTodayFocus() {
   }).join('');
 }
 
+/**
+ * Calculate composite health metrics across budget runway, task execution, and vendor readiness.
+ */
 function renderEventHealth() {
   const stats = calcBudgetStats(currentEvent, currentExpenses);
   const completedTasks = currentTasks.filter(t => t.status === 'completed').length;
@@ -498,12 +526,18 @@ function renderEventHealth() {
 }
 
 // ─── Budget ───────────────────────────────────────────────────
+/**
+ * Render the complete Budget view: overview cards, category breakdown charts, and tabular expense list.
+ */
 function renderBudget() {
   renderBudgetOverview();
   renderCategorySummary();
   renderExpenseTable();
 }
 
+/**
+ * Render the hero budget allocation segmented bar and top-level financial summaries.
+ */
 function renderBudgetOverview() {
   const stats = calcBudgetStats(currentEvent, currentExpenses);
   const items = [
@@ -548,6 +582,12 @@ function renderBudgetOverview() {
   ).join('');
 }
 
+/**
+ * Retrieve standard brand color token for an expense category.
+ *
+ * @param {string} cat - Expense category name
+ * @returns {string} Hex color code
+ */
 function getCategoryColor(cat) {
   const map = {
     'Venue': '#641C32', 'Catering': '#E88932', 'Decoration': '#D6A84F',
@@ -557,6 +597,9 @@ function getCategoryColor(cat) {
   return map[cat] || '#888';
 }
 
+/**
+ * Render proportional expense distribution breakdown list with category icons and formatted currency amounts.
+ */
 function renderCategorySummary() {
   const cats = {};
   currentExpenses.forEach(e => {
@@ -594,6 +637,9 @@ function renderCategorySummary() {
   document.getElementById('category-summary-list').innerHTML = html;
 }
 
+/**
+ * Render filtered tabular list of event expenses with status badges, action menus, and edit/delete controls.
+ */
 function renderExpenseTable() {
   const filtered = expenseFilter === 'all'
     ? currentExpenses
@@ -645,6 +691,11 @@ function renderExpenseTable() {
 }
 
 // ─── Expense Modal ────────────────────────────────────────────
+/**
+ * Open the expense creation dialog with optional prefilled category or status defaults.
+ *
+ * @param {Partial<Object>} [prefill={}] - Optional initial values for the new expense form
+ */
 function openAddExpenseModal(prefill = {}) {
   editingExpenseId = prefill.id || null;
   const title = editingExpenseId ? 'Edit Expense' : 'Add Expense';
@@ -718,11 +769,21 @@ function openAddExpenseModal(prefill = {}) {
   });
 }
 
+/**
+ * Open the expense editor modal populated with existing record attributes.
+ *
+ * @param {string} id - Unique expense ID to edit
+ */
 function openEditExpenseModal(id) {
   const expense = currentExpenses.find(e => e.id === id);
   if (expense) openAddExpenseModal(expense);
 }
 
+/**
+ * Delete an expense record after confirming with user.
+ *
+ * @param {string} id - Unique expense ID to delete
+ */
 function deleteExpense(id) {
   openConfirmModal(
     'Delete Expense',
@@ -738,6 +799,9 @@ function deleteExpense(id) {
 }
 
 // ─── What-If Simulation ───────────────────────────────────────
+/**
+ * Run What-If financial simulation calculations based on guest adjustments or cost variance inputs.
+ */
 function runWhatIf() {
   const extraGuests    = parseInt(document.getElementById('wi-guests').value) || 0;
   const unexpectedExp  = parseFloat(document.getElementById('wi-expense').value) || 0;
@@ -784,6 +848,9 @@ function runWhatIf() {
 }
 
 // ─── Tasks ────────────────────────────────────────────────────
+/**
+ * Render the Responsibility Board view: task cards, completion statistics, filter tabs, and WhatsApp text extractor.
+ */
 function renderTasks() {
   const filtered = taskFilter === 'all' ? currentTasks
     : taskFilter === 'completed' ? currentTasks.filter(t => t.status === 'completed')
@@ -806,6 +873,12 @@ function renderTasks() {
   container.innerHTML = filtered.map(t => renderTaskCard(t)).join('');
 }
 
+/**
+ * Generate HTML markup string for an individual task card.
+ *
+ * @param {Object} t - Task item object
+ * @returns {string} HTML markup for task card
+ */
 function renderTaskCard(t) {
   const deadlineStr = t.deadline ? new Date(t.deadline).toLocaleDateString('en-IN', {day:'numeric',month:'short'}) : '—';
   const isOverdue = t.deadline && t.status !== 'completed' && new Date(t.deadline) < new Date();
@@ -838,6 +911,11 @@ function renderTaskCard(t) {
   `;
 }
 
+/**
+ * Mark a task as completed and persist updated state.
+ *
+ * @param {string} id - Unique task ID to complete
+ */
 function completeTask(id) {
   const task = currentTasks.find(t => t.id === id);
   if (task) {
@@ -850,6 +928,11 @@ function completeTask(id) {
   }
 }
 
+/**
+ * Revert a completed task back to pending status.
+ *
+ * @param {string} id - Unique task ID to reopen
+ */
 function reopenTask(id) {
   const task = currentTasks.find(t => t.id === id);
   if (task) {
@@ -861,6 +944,11 @@ function reopenTask(id) {
   }
 }
 
+/**
+ * Remove a task from the active event after user confirmation.
+ *
+ * @param {string} id - Unique task ID to delete
+ */
 function deleteTask(id) {
   openConfirmModal('Delete Task', 'Delete this task? This cannot be undone.', () => {
     currentTasks = currentTasks.filter(t => t.id !== id);
@@ -871,6 +959,11 @@ function deleteTask(id) {
   });
 }
 
+/**
+ * Open the task creation dialog with optional prefilled category or priority defaults.
+ *
+ * @param {Partial<Object>} [prefill={}] - Initial values for new task form
+ */
 function openAddTaskModal(prefill = {}) {
   editingTaskId = prefill.id || null;
   const title = editingTaskId ? 'Edit Task' : 'Add Task';
@@ -943,12 +1036,20 @@ function openAddTaskModal(prefill = {}) {
   });
 }
 
+/**
+ * Open the task editor modal populated with current task data.
+ *
+ * @param {string} id - Unique task ID to edit
+ */
 function openEditTaskModal(id) {
   const task = currentTasks.find(t => t.id === id);
   if (task) openAddTaskModal(task);
 }
 
 // ─── Extract Tasks ────────────────────────────────────────────
+/**
+ * Parse unstructured text via NLP heuristics to detect actionable task assignments.
+ */
 function runExtractTasks() {
   const text = document.getElementById('extract-input').value.trim();
   if (!text) { showToast('Please paste a message to extract tasks from.', 'warning'); return; }
@@ -978,6 +1079,11 @@ function runExtractTasks() {
   `;
 }
 
+/**
+ * Persist extracted tasks into the current event task board.
+ *
+ * @param {number} count - Number of candidate tasks to commit
+ */
 function confirmExtractedTasks(count) {
   let added = 0;
   for (let i = 0; i < count; i++) {
@@ -1006,6 +1112,9 @@ function confirmExtractedTasks(count) {
 }
 
 // ─── Timeline ─────────────────────────────────────────────────
+/**
+ * Render chronological schedule of events with real-time countdown indicator.
+ */
 function renderTimeline() {
   startCountdown();
   const phases = ['30 days before','14 days before','7 days before','3 days before','1 day before','Event day','After event'];
@@ -1052,6 +1161,11 @@ function renderTimeline() {
   }).join('');
 }
 
+/**
+ * Toggle completion status of a schedule timeline event.
+ *
+ * @param {string} id - Unique timeline event ID
+ */
 function toggleTimelineItem(id) {
   const item = currentTimeline.find(i => i.id === id);
   if (item) {
@@ -1062,6 +1176,11 @@ function toggleTimelineItem(id) {
   }
 }
 
+/**
+ * Delete a timeline milestone item after user confirmation.
+ *
+ * @param {string} id - Unique timeline item ID to delete
+ */
 function deleteTimelineItem(id) {
   openConfirmModal('Delete Timeline Item', 'Remove this milestone from the timeline?', () => {
     currentTimeline = currentTimeline.filter(i => i.id !== id);
@@ -1072,6 +1191,9 @@ function deleteTimelineItem(id) {
   });
 }
 
+/**
+ * Prompt user to append a custom timeline item into the current schedule.
+ */
 function addTimelineItem() {
   const task = document.getElementById('tl-task').value.trim();
   const phase = document.getElementById('tl-phase').value;
@@ -1089,12 +1211,18 @@ function addTimelineItem() {
   showToast('Milestone added to timeline.', 'success');
 }
 
+/**
+ * Initiate interval timer ticking every second to refresh real-time countdown.
+ */
 function startCountdown() {
   if (countdownInterval) clearInterval(countdownInterval);
   updateCountdown();
   countdownInterval = setInterval(updateCountdown, 1000);
 }
 
+/**
+ * Compute and render days, hours, minutes, and seconds remaining until event commencement.
+ */
 function updateCountdown() {
   if (!currentEvent) return;
   const target = new Date(currentEvent.date);
@@ -1143,11 +1271,17 @@ function updateCountdown() {
 }
 
 // ─── Vendors ──────────────────────────────────────────────────
+/**
+ * Render Vendor Directory view: category chips, vendor cards grid, and add-vendor CTA.
+ */
 function renderVendors() {
   renderVendorSummary();
   renderVendorGrid();
 }
 
+/**
+ * Render vendor confirmation metrics and deposit tracking indicators.
+ */
 function renderVendorSummary() {
   const total = currentVendors.length;
   const confirmed = currentVendors.filter(v => v.confirmed).length;
@@ -1170,6 +1304,9 @@ function renderVendorSummary() {
   `;
 }
 
+/**
+ * Render interactive grid of vendor cards with category badges and contact controls.
+ */
 function renderVendorGrid() {
   const container = document.getElementById('vendors-grid');
   if (currentVendors.length === 0) {
@@ -1185,6 +1322,12 @@ function renderVendorGrid() {
   container.innerHTML = currentVendors.map(v => renderVendorCard(v)).join('');
 }
 
+/**
+ * Generate HTML markup string for an individual vendor card.
+ *
+ * @param {Object} v - Vendor record object
+ * @returns {string} HTML markup for vendor card
+ */
 function renderVendorCard(v) {
   const advancePct = v.quoted ? Math.min(100, Math.round((v.advance / v.quoted) * 100)) : 0;
   return `
@@ -1230,6 +1373,11 @@ function renderVendorCard(v) {
   `;
 }
 
+/**
+ * Toggle confirmed booking status for a vendor.
+ *
+ * @param {string} id - Unique vendor ID
+ */
 function confirmVendor(id) {
   const v = currentVendors.find(v => v.id === id);
   if (v) {
@@ -1240,6 +1388,12 @@ function confirmVendor(id) {
   }
 }
 
+/**
+ * Copy vendor contact number to clipboard with feedback toast.
+ *
+ * @param {string} number - Phone number string
+ * @param {string} name - Vendor or contact name
+ */
 function copyContact(number, name) {
   navigator.clipboard.writeText(number).then(() => {
     showToast(`${name || 'Vendor'}'s contact copied: ${number}`, 'success');
@@ -1248,6 +1402,11 @@ function copyContact(number, name) {
   });
 }
 
+/**
+ * Delete a vendor record after user confirmation.
+ *
+ * @param {string} id - Unique vendor ID to delete
+ */
 function deleteVendor(id) {
   openConfirmModal('Delete Vendor', 'Remove this vendor from your checklist?', () => {
     currentVendors = currentVendors.filter(v => v.id !== id);
@@ -1258,6 +1417,11 @@ function deleteVendor(id) {
   });
 }
 
+/**
+ * Open modal dialog to register a new service vendor.
+ *
+ * @param {Partial<Object>} [prefill={}] - Initial values for new vendor form
+ */
 function openAddVendorModal(prefill = {}) {
   editingVendorId = prefill.id || null;
   const title = editingVendorId ? 'Edit Vendor' : 'Add Vendor';
@@ -1335,6 +1499,11 @@ function openAddVendorModal(prefill = {}) {
   });
 }
 
+/**
+ * Open modal dialog to edit an existing vendor record.
+ *
+ * @param {string} id - Unique vendor ID to edit
+ */
 function openEditVendorModal(id) {
   const v = currentVendors.find(v => v.id === id);
   if (v) openAddVendorModal(v);
@@ -1352,6 +1521,9 @@ const CRISIS_OPTIONS = [
   { key: 'custom',          icon: '🚨', label: 'Custom Emergency',       desc: 'Something else happened' },
 ];
 
+/**
+ * Render Crisis Switch console with contingency scenario cards and active rescue plan.
+ */
 function renderCrisis() {
   const grid = document.getElementById('crisis-grid');
   grid.innerHTML = CRISIS_OPTIONS.map(c => `
@@ -1364,6 +1536,11 @@ function renderCrisis() {
   renderIncidents();
 }
 
+/**
+ * Select an active crisis scenario and update card selection states.
+ *
+ * @param {string} key - Identifier of the selected crisis contingency scenario
+ */
 function selectCrisis(key) {
   selectedCrisisType = key;
   const option = CRISIS_OPTIONS.find(c => c.key === key);
@@ -1378,6 +1555,9 @@ function selectCrisis(key) {
   document.getElementById('rescue-plan-output').innerHTML = '';
 }
 
+/**
+ * Generate deterministic or AI-assisted contingency rescue plan for active crisis.
+ */
 function generatePlan() {
   if (!selectedCrisisType) { showToast('Please select a crisis type first.', 'warning'); return; }
   const description = document.getElementById('crisis-description').value.trim();
@@ -1400,6 +1580,11 @@ function generatePlan() {
   }, 900);
 }
 
+/**
+ * Render rescue plan UI: action items, financial delta, and broadcast drafts.
+ *
+ * @param {Object} plan - Contingency rescue plan object
+ */
 function renderRescuePlan(plan) {
   const outputEl = document.getElementById('rescue-plan-output');
   outputEl.style.display = 'block';
@@ -1494,6 +1679,9 @@ function renderRescuePlan(plan) {
   outputEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+/**
+ * Apply generated rescue plan to live event data: inject emergency tasks and log incident.
+ */
 function applyRescuePlan() {
   if (!rescuePlanData) return;
   const plan = rescuePlanData;
@@ -1561,6 +1749,9 @@ function applyRescuePlan() {
   confirmDiv.scrollIntoView({ behavior: 'smooth' });
 }
 
+/**
+ * Copy emergency broadcast message for guests to clipboard.
+ */
 function copyGuestMessage() {
   if (!rescuePlanData) return;
   const msg = rescuePlanData.guestMessage;
@@ -1571,6 +1762,9 @@ function copyGuestMessage() {
   });
 }
 
+/**
+ * Persist active crisis resolution details to permanent event incident log.
+ */
 function saveAsIncident() {
   if (!rescuePlanData) return;
   const incident = {
@@ -1587,6 +1781,9 @@ function saveAsIncident() {
   showToast('Incident saved to log.', 'info');
 }
 
+/**
+ * Clear active crisis scenario selection and reset rescue plan display.
+ */
 function resetCrisis() {
   selectedCrisisType = null;
   rescuePlanData = null;
@@ -1597,6 +1794,9 @@ function resetCrisis() {
   document.getElementById('crisis-description').value = '';
 }
 
+/**
+ * Render audit log of all recorded crisis incidents and applied rescue plans.
+ */
 function renderIncidents() {
   const list = document.getElementById('incidents-list');
   if (currentIncidents.length === 0) {
@@ -1622,6 +1822,9 @@ const MESSAGE_TYPES = [
   { key: 'emergency_announcement',label:'Emergency Announcement',icon: '🚨' },
 ];
 
+/**
+ * Render Message Studio interface: purpose selector, tone options, and generated message preview.
+ */
 function renderMessages() {
   const grid = document.getElementById('message-type-grid');
   grid.innerHTML = MESSAGE_TYPES.map(mt => `
@@ -1637,6 +1840,11 @@ function renderMessages() {
   }
 }
 
+/**
+ * Select communication message type and refresh preview.
+ *
+ * @param {string} key - Purpose/category key for message generation
+ */
 function selectMessageType(key) {
   selectedMessageType = key;
   document.querySelectorAll('.message-type-btn').forEach(btn => {
@@ -1644,6 +1852,9 @@ function selectMessageType(key) {
   });
 }
 
+/**
+ * Generate localized communication message based on active event context and selected parameters.
+ */
 function doGenerateMessage() {
   if (!selectedMessageType) { showToast('Please select a message type first.', 'warning'); return; }
   const lang    = document.getElementById('msg-language').value;
@@ -1671,6 +1882,9 @@ function doGenerateMessage() {
   document.getElementById('message-output-card').scrollIntoView({ behavior: 'smooth' });
 }
 
+/**
+ * Copy generated communication message to system clipboard.
+ */
 function copyMessage() {
   const text = document.getElementById('message-output').value;
   if (!text) { showToast('No message to copy.', 'warning'); return; }
@@ -1682,6 +1896,9 @@ function copyMessage() {
 }
 
 // ─── Settings ─────────────────────────────────────────────────
+/**
+ * Render Settings view: event preferences, data export/import, storage metrics, and reset options.
+ */
 function renderSettings() {
   const el = document.getElementById('settings-event-info');
   if (!currentEvent) {
@@ -1705,6 +1922,9 @@ function renderSettings() {
   `;
 }
 
+/**
+ * Export all event records, expenses, tasks, vendors, and logs as downloadable JSON file.
+ */
 function exportData() {
   const data = {
     sahaay_version: '1.0',
@@ -1726,6 +1946,11 @@ function exportData() {
   showToast('Event data exported as JSON.', 'success');
 }
 
+/**
+ * Import and validate JSON backup file, restoring event state into local storage.
+ *
+ * @param {File} file - JSON backup file to parse and restore
+ */
 function importData(file) {
   if (!file) return;
   const reader = new FileReader();
@@ -1761,6 +1986,9 @@ function importData(file) {
   document.getElementById('import-input').value = '';
 }
 
+/**
+ * Reset all local storage records and restart application into onboarding mode.
+ */
 function resetAllData() {
   openConfirmModal(
     'Reset All Event Data',
@@ -1779,6 +2007,9 @@ function resetAllData() {
 }
 
 // ─── Notifications ────────────────────────────────────────────
+/**
+ * Scan event state for overdue items, unconfirmed vendors, and budget thresholds.
+ */
 function buildNotifications() {
   const notifs = [];
   const urgentTasks = currentTasks.filter(t => t.status !== 'completed' && t.priority === 'urgent');
@@ -1803,6 +2034,13 @@ function buildNotifications() {
 }
 
 // ─── Generic Modal ────────────────────────────────────────────
+/**
+ * Display generic accessible modal dialog with custom body content and save callback.
+ *
+ * @param {string} title - Modal heading text
+ * @param {string} bodyHtml - Injected body markup
+ * @param {Function} [onSave] - Callback executed on confirm action
+ */
 function openModal(title, bodyHtml, onSave) {
   closeModal();
   const overlay = document.createElement('div');
@@ -1848,6 +2086,9 @@ function openModal(title, bodyHtml, onSave) {
   document.addEventListener('keydown', overlay._escHandler);
 }
 
+/**
+ * Dismiss active modal dialog and clean up DOM listeners and focus state.
+ */
 function closeModal() {
   const modal = document.getElementById('active-modal');
   if (modal) {
@@ -1857,6 +2098,13 @@ function closeModal() {
   }
 }
 
+/**
+ * Open confirmation modal dialog with explicit confirm/cancel buttons.
+ *
+ * @param {string} title - Dialog title
+ * @param {string} message - Explanatory prompt
+ * @param {Function} onConfirm - Callback executed when user confirms
+ */
 function openConfirmModal(title, message, onConfirm) {
   closeModal();
   const overlay = document.createElement('div');
@@ -1893,6 +2141,9 @@ function openConfirmModal(title, message, onConfirm) {
 }
 
 // ─── Onboarding ───────────────────────────────────────────────
+/**
+ * Attach validation and change listeners to onboarding wizard form inputs.
+ */
 function initOnboarding() {
   // Set min date to tomorrow
   const dateInput = document.getElementById('ob-date');
@@ -1929,11 +2180,24 @@ function initOnboarding() {
   document.getElementById('ob-demo-btn').addEventListener('click', loadDemoEvent);
 }
 
+/**
+ * Retrieve array of selected accessibility requirement strings from onboarding form.
+ *
+ * @returns {string[]} Selected accessibility options
+ */
 function getAccessibilityChecked() {
   return Array.from(document.querySelectorAll('#ob-accessibility input[type=checkbox]'))
     .filter(cb => cb.checked).map(cb => cb.value);
 }
 
+/**
+ * Validate individual onboarding field using provided test predicate.
+ *
+ * @param {string} id - Input element ID
+ * @param {string} errId - Error message container ID
+ * @param {Function} check - Validation test predicate
+ * @returns {boolean} True if field passes validation
+ */
 function validateOnboardingField(id, errId, check) {
   const el = document.getElementById(id);
   const err = document.getElementById(errId);
@@ -1943,6 +2207,9 @@ function validateOnboardingField(id, errId, check) {
   return valid;
 }
 
+/**
+ * Validate onboarding form, construct initial event entity, and initialize starter packs.
+ */
 function submitOnboardingForm() {
   let valid = true;
   valid &= validateOnboardingField('ob-event-name', 'err-event-name', v => v.trim().length > 0);
@@ -1989,6 +2256,9 @@ function submitOnboardingForm() {
   }, 800);
 }
 
+/**
+ * Populate application storage with comprehensive demo dataset.
+ */
 function loadDemoEvent() {
   const event = createDemoEvent();
   Store.set(KEYS.EVENT, event);
@@ -2003,6 +2273,9 @@ function loadDemoEvent() {
 }
 
 // ─── Wire up all event listeners ─────────────────────────────
+/**
+ * Bind global DOM event listeners for navigation, keyboard shortcuts, and responsive controls.
+ */
 function initEventListeners() {
   // Navigation: sidebar + bottom nav
   document.querySelectorAll('[data-view]').forEach(el => {

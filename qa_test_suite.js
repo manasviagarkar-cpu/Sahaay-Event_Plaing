@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const baseDir = path.join('c:', 'Users', 'ASUS', 'OneDrive', 'Documents', 'Projects', 'Event');
+const baseDir = typeof __dirname !== 'undefined' ? __dirname : path.resolve('.');
 const dataCode = fs.readFileSync(path.join(baseDir, 'data.js'), 'utf8');
 const appCode = fs.readFileSync(path.join(baseDir, 'app.js'), 'utf8');
 const htmlCode = fs.readFileSync(path.join(baseDir, 'index.html'), 'utf8');

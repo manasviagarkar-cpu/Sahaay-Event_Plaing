@@ -1,0 +1,25 @@
+{
+  "name": "sahaay-event-planner",
+  "version": "1.0.0",
+  "description": "Sahaay — AI-Powered Celebration Operations & Cultural Event Planner",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node qa_test_suite.js",
+    "test:static": "node test_qa_static.js",
+    "lint": "npx eslint app.js data.js server.js"
+  },
+  "keywords": [
+    "event-planner",
+    "indian-weddings",
+    "crisis-management",
+    "accessibility",
+    "vanilla-js",
+    "cultural-celebrations"
+  ],
+  "author": "Sahaay Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
