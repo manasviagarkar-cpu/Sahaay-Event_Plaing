@@ -154,8 +154,13 @@ function showToast(msg, type = 'info', duration = 3800) {
  * Closes the mobile sidebar as a side effect.
  *
  * @param {'dashboard'|'budget'|'tasks'|'timeline'|'vendors'|'crisis'|'messages'|'settings'} view
+ * @param {boolean} [updateHash=true] - Whether to sync window URL hash
  */
-function navigateTo(view) {
+function navigateTo(view, updateHash = true) {
+  const validViews = ['dashboard', 'budget', 'tasks', 'timeline', 'vendors', 'crisis', 'messages', 'settings'];
+  if (!validViews.includes(view)) {
+    view = 'dashboard';
+  }
   currentView = view;
 
   // Hide all views
@@ -165,8 +170,9 @@ function navigateTo(view) {
 
   // Update sidebar nav
   document.querySelectorAll('.nav-item').forEach(n => {
-    n.classList.toggle('active', n.dataset.view === view);
-    n.setAttribute('aria-current', n.dataset.view === view ? 'page' : 'false');
+    const isActive = n.dataset.view === view;
+    n.classList.toggle('active', isActive);
+    n.setAttribute('aria-current', isActive ? 'page' : 'false');
   });
 
   // Update bottom nav
@@ -176,6 +182,22 @@ function navigateTo(view) {
 
   // Close mobile sidebar
   closeMobileSidebar();
+
+  // Scroll to top of view
+  if (typeof window !== 'undefined' && typeof window.scrollTo === 'function') {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  // Update URL hash for redirection / bookmarking
+  if (updateHash && typeof window !== 'undefined' && window.location) {
+    if (window.location.hash !== '#' + view) {
+      if (typeof history !== 'undefined' && history.pushState) {
+        history.pushState(null, '', '#' + view);
+      } else {
+        window.location.hash = view;
+      }
+    }
+  }
 
   // Render relevant view
   switch (view) {
@@ -232,7 +254,15 @@ function showApp() {
   updateTopbar();
   updateSidebarInfo();
   buildNotifications();
-  navigateTo('dashboard');
+
+  let targetView = 'dashboard';
+  if (typeof window !== 'undefined' && window.location && window.location.hash) {
+    const hashView = window.location.hash.replace('#', '').trim();
+    if (['dashboard', 'budget', 'tasks', 'timeline', 'vendors', 'crisis', 'messages', 'settings'].includes(hashView)) {
+      targetView = hashView;
+    }
+  }
+  navigateTo(targetView, false);
 
   // Responsive: show menu toggle on mobile
   if (window.innerWidth <= 768) {
@@ -1978,6 +2008,30 @@ function initEventListeners() {
   document.querySelectorAll('[data-view]').forEach(el => {
     el.addEventListener('click', () => navigateTo(el.dataset.view));
   });
+
+  // Sidebar logo click goes to dashboard overview
+  const sidebarLogo = document.getElementById('sidebar-logo');
+  if (sidebarLogo) {
+    sidebarLogo.addEventListener('click', () => navigateTo('dashboard'));
+    sidebarLogo.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        navigateTo('dashboard');
+      }
+    });
+  }
+
+  // Sync with browser back / forward buttons
+  if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('popstate', () => {
+      if (currentEvent && typeof window !== 'undefined' && window.location && window.location.hash) {
+        const hashView = window.location.hash.replace('#', '').trim();
+        if (['dashboard', 'budget', 'tasks', 'timeline', 'vendors', 'crisis', 'messages', 'settings'].includes(hashView)) {
+          navigateTo(hashView, false);
+        }
+      }
+    });
+  }
 
   // Mobile menu toggle
   const menuToggle = document.getElementById('menu-toggle');
