@@ -1904,6 +1904,33 @@ select.form-control { appearance: none; background-image: url("data:image/svg+xm
 .message-type-btn:hover { border-color: var(--saffron); background: rgba(232,137,50,0.06); }
 .message-type-btn.selected { border-color: var(--saffron); background: rgba(232,137,50,0.10); color: var(--maroon); }
 
+/* ─── Incident Log ─────────────────────────────────────────── */
+.incident-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--alert);
+  background: rgba(185,74,72,0.04);
+  border-top: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  transition: background var(--t-fast);
+}
+.incident-card:hover { background: rgba(185,74,72,0.07); }
+.incident-title {
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: var(--maroon);
+}
+.incident-meta {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
 /* ─── Settings ─────────────────────────────────────────────── */
 .settings-section {
   background: var(--white);

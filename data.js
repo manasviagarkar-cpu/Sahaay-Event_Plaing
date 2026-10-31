@@ -777,7 +777,7 @@ function simulateWhatIf(event, expenses, changes) {
 
   if (changes.budgetReduction && changes.budgetReduction > 0) {
     impact += changes.budgetReduction;
-    breakdown.push({ label: 'Budget reduction', amount: -changes.budgetReduction });
+    breakdown.push({ label: `Budget reduced by ${formatINR(changes.budgetReduction)}`, amount: -changes.budgetReduction });
   }
 
   const newTotal = base.total - (changes.budgetReduction || 0);

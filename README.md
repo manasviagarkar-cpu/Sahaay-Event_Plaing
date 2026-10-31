@@ -119,6 +119,8 @@ Sahaay generates a **step-by-step rescue plan** including:
 - A guest communication message
 - Auto-added rescue tasks and emergency expenses
 
+Crisis types covered: Caterer Delayed, Vendor Cancelled, Heavy Rain / Weather, Power Failure, More Guests Arrived, Budget Reduced, Important Guest is Late, Custom Emergency.
+
 #### 3.7 Message Studio
 Generates contextually appropriate messages for 7 types:
 - Guest arrival notice, Delay notice, Vendor briefing, Volunteer instructions, Thank you message, Reschedule notice, Emergency alert

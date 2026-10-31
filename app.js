@@ -84,22 +84,22 @@ let rescuePlanData = null;
  * Called on boot and after any data import.
  */
 function loadData() {
-  currentEvent     = Store.get(KEYS.EVENT);
-  currentExpenses  = Store.get(KEYS.EXPENSES)  || [];
-  currentTasks     = Store.get(KEYS.TASKS)     || [];
-  currentVendors   = Store.get(KEYS.VENDORS)   || [];
-  currentTimeline  = Store.get(KEYS.TIMELINE)  || [];
+  currentEvent = Store.get(KEYS.EVENT);
+  currentExpenses = Store.get(KEYS.EXPENSES) || [];
+  currentTasks = Store.get(KEYS.TASKS) || [];
+  currentVendors = Store.get(KEYS.VENDORS) || [];
+  currentTimeline = Store.get(KEYS.TIMELINE) || [];
   currentIncidents = Store.get(KEYS.INCIDENTS) || [];
 }
 
 /** Persist the expenses array to localStorage. */
-function saveExpenses()  { Store.set(KEYS.EXPENSES,  currentExpenses); }
+function saveExpenses() { Store.set(KEYS.EXPENSES, currentExpenses); }
 /** Persist the tasks array to localStorage. */
-function saveTasks()     { Store.set(KEYS.TASKS,     currentTasks); }
+function saveTasks() { Store.set(KEYS.TASKS, currentTasks); }
 /** Persist the vendors array to localStorage. */
-function saveVendors()   { Store.set(KEYS.VENDORS,   currentVendors); }
+function saveVendors() { Store.set(KEYS.VENDORS, currentVendors); }
 /** Persist the timeline array to localStorage. */
-function saveTimeline()  { Store.set(KEYS.TIMELINE,  currentTimeline); }
+function saveTimeline() { Store.set(KEYS.TIMELINE, currentTimeline); }
 /** Persist the incidents array to localStorage. */
 function saveIncidents() { Store.set(KEYS.INCIDENTS, currentIncidents); }
 
@@ -202,13 +202,13 @@ function navigateTo(view, updateHash = true) {
   // Render relevant view
   switch (view) {
     case 'dashboard': renderDashboard(); break;
-    case 'budget':    renderBudget(); break;
-    case 'tasks':     renderTasks(); break;
-    case 'timeline':  renderTimeline(); startCountdown(); break;
-    case 'vendors':   renderVendors(); break;
-    case 'crisis':    renderCrisis(); break;
-    case 'messages':  renderMessages(); break;
-    case 'settings':  renderSettings(); break;
+    case 'budget': renderBudget(); break;
+    case 'tasks': renderTasks(); break;
+    case 'timeline': renderTimeline(); startCountdown(); break;
+    case 'vendors': renderVendors(); break;
+    case 'crisis': renderCrisis(); break;
+    case 'messages': renderMessages(); break;
+    case 'settings': renderSettings(); break;
   }
 }
 
@@ -349,26 +349,26 @@ function renderStatCards() {
   const budgetTag = stats.overBudget
     ? { text: 'Over Budget', type: 'bad' }
     : budgetPctUsed >= 90
-    ? { text: `${budgetPctUsed}% Committed`, type: 'warn' }
-    : { text: `${100 - budgetPctUsed}% Available`, type: 'good' };
+      ? { text: `${budgetPctUsed}% Committed`, type: 'warn' }
+      : { text: `${100 - budgetPctUsed}% Available`, type: 'good' };
 
   const taskTag = totalTasks === 0
     ? { text: 'No Tasks', type: 'neutral' }
     : completedTasks === totalTasks
-    ? { text: 'All Done ✓', type: 'good' }
-    : { text: `${totalTasks - completedTasks} Pending`, type: completedTasks > 0 ? 'good' : 'warn' };
+      ? { text: 'All Done ✓', type: 'good' }
+      : { text: `${totalTasks - completedTasks} Pending`, type: completedTasks > 0 ? 'good' : 'warn' };
 
   const vendorTag = currentVendors.length === 0
     ? { text: 'No Vendors', type: 'neutral' }
     : pendingVendors === 0
-    ? { text: '100% Confirmed', type: 'good' }
-    : { text: `${pendingVendors} Unconfirmed`, type: 'warn' };
+      ? { text: '100% Confirmed', type: 'good' }
+      : { text: `${pendingVendors} Unconfirmed`, type: 'warn' };
 
   const daysTag = days > 7
     ? { text: 'On Track', type: 'good' }
     : days >= 0
-    ? { text: 'Final Stretch', type: 'warn' }
-    : { text: 'Concluded', type: 'neutral' };
+      ? { text: 'Final Stretch', type: 'warn' }
+      : { text: 'Concluded', type: 'neutral' };
 
   const cards = [
     {
@@ -407,7 +407,7 @@ function renderStatCards() {
       cardClass: 'stat-days',
       label: 'Days to Celebration',
       value: days > 0 ? days : (days === 0 ? 'Today!' : Math.abs(days) + 'd ago'),
-      sub: currentEvent ? new Date(currentEvent.date).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}) : '—',
+      sub: currentEvent ? new Date(currentEvent.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—',
       tag: daysTag,
       icon: '🗓',
       iconBg: 'rgba(100,28,50,0.12)',
@@ -451,7 +451,7 @@ function renderTodayFocus() {
   }
 
   container.innerHTML = urgent.map(t => {
-    const deadlineStr = t.deadline ? new Date(t.deadline).toLocaleDateString('en-IN', {day:'numeric',month:'short'}) : '';
+    const deadlineStr = t.deadline ? new Date(t.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '';
     return `
       <div class="focus-task ${t.status === 'completed' ? 'done' : ''}" data-priority="${esc(t.priority)}" data-id="${esc(t.id)}">
         <div class="focus-task-info">
@@ -483,7 +483,7 @@ function renderEventHealth() {
   const vendorPct = totalVendors ? Math.round((confirmedVendors / totalVendors) * 100) : 0;
 
   const budgetStatus = budgetPct >= 30 ? 'good' : budgetPct >= 10 ? 'warn' : 'bad';
-  const taskStatus   = taskPct >= 60 ? 'good' : taskPct >= 30 ? 'warn' : 'bad';
+  const taskStatus = taskPct >= 60 ? 'good' : taskPct >= 30 ? 'warn' : 'bad';
   const vendorStatus = vendorPct >= 70 ? 'good' : vendorPct >= 40 ? 'warn' : 'bad';
 
   // Overall badge
@@ -505,9 +505,9 @@ function renderEventHealth() {
   }
 
   const bars = [
-    { label: 'Budget Runway',   pct: budgetPct, status: budgetStatus, text: `${budgetPct}% remaining` },
-    { label: 'Task Execution',  pct: taskPct,   status: taskStatus,   text: `${completedTasks}/${totalTasks} done` },
-    { label: 'Vendor Readiness',pct: vendorPct, status: vendorStatus, text: `${confirmedVendors}/${totalVendors} confirmed` },
+    { label: 'Budget Runway', pct: budgetPct, status: budgetStatus, text: `${budgetPct}% remaining` },
+    { label: 'Task Execution', pct: taskPct, status: taskStatus, text: `${completedTasks}/${totalTasks} done` },
+    { label: 'Vendor Readiness', pct: vendorPct, status: vendorStatus, text: `${confirmedVendors}/${totalVendors} confirmed` },
   ];
 
   const colorMap = { good: 'success', warn: 'warning', bad: 'danger' };
@@ -541,11 +541,11 @@ function renderBudget() {
 function renderBudgetOverview() {
   const stats = calcBudgetStats(currentEvent, currentExpenses);
   const items = [
-    { label: 'Total Budget',   amount: stats.total,     color: 'var(--ink)', sub: 'Approved allocation' },
-    { label: 'Committed',      amount: stats.committed, color: 'var(--saffron)', sub: `${stats.total > 0 ? Math.round((stats.committed/stats.total)*100) : 0}% of budget` },
-    { label: 'Paid',           amount: stats.paid,      color: 'var(--emerald)', sub: 'Confirmed cleared' },
-    { label: 'Pending',        amount: stats.pending,   color: 'var(--gold)', sub: 'Yet to be committed' },
-    { label: 'Optional',       amount: stats.optional,  color: 'var(--maroon)', sub: 'Can be scaled back' },
+    { label: 'Total Budget', amount: stats.total, color: 'var(--ink)', sub: 'Approved allocation' },
+    { label: 'Committed', amount: stats.committed, color: 'var(--saffron)', sub: `${stats.total > 0 ? Math.round((stats.committed / stats.total) * 100) : 0}% of budget` },
+    { label: 'Paid', amount: stats.paid, color: 'var(--emerald)', sub: 'Confirmed cleared' },
+    { label: 'Pending', amount: stats.pending, color: 'var(--gold)', sub: 'Yet to be committed' },
+    { label: 'Optional', amount: stats.optional, color: 'var(--maroon)', sub: 'Can be scaled back' },
     {
       label: 'Remaining',
       amount: stats.remaining,
@@ -570,12 +570,12 @@ function renderBudgetOverview() {
   // Visual bar
   const total = stats.total || 1;
   const segments = [
-    { width: (stats.paid / total * 100).toFixed(1),      color: 'var(--emerald)', label: 'Paid' },
+    { width: (stats.paid / total * 100).toFixed(1), color: 'var(--emerald)', label: 'Paid' },
     { width: ((stats.committed - stats.paid) / total * 100).toFixed(1), color: 'var(--saffron)', label: 'Promised' },
-    { width: (stats.pending / total * 100).toFixed(1),   color: 'var(--gold)',    label: 'Pending' },
+    { width: (stats.pending / total * 100).toFixed(1), color: 'var(--gold)', label: 'Pending' },
   ];
   document.getElementById('budget-visual-bar').innerHTML = segments.map(s =>
-    `<div class="budget-bar-segment" style="width:${Math.max(0,s.width)}%;background:${s.color}" title="${s.label}: ${s.width}%"></div>`
+    `<div class="budget-bar-segment" style="width:${Math.max(0, s.width)}%;background:${s.color}" title="${s.label}: ${s.width}%"></div>`
   ).join('');
   document.getElementById('budget-bar-legend').innerHTML = segments.map(s =>
     `<span class="legend-pill"><span class="legend-dot" style="background:${s.color}"></span>${s.label}: ${s.width}%</span>`
@@ -611,7 +611,7 @@ function renderCategorySummary() {
     'Transport': '🚗', 'Invitations': '💌', 'Guest support': '🤝', 'Emergency': '🚨', 'Other': '📦'
   };
   const total = Object.values(cats).reduce((s, v) => s + v, 0) || 1;
-  const entries = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const entries = Object.entries(cats).sort((a, b) => b[1] - a[1]);
   if (entries.length === 0) {
     document.getElementById('category-summary-list').innerHTML = `
       <div class="text-muted text-small text-center" style="padding:14px">No expense categories to summarize yet.</div>`;
@@ -657,7 +657,7 @@ function renderExpenseTable() {
   }
 
   const rows = filtered.map(e => {
-    const dueStr = e.dueDate ? new Date(e.dueDate).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}) : '—';
+    const dueStr = e.dueDate ? new Date(e.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
     const catColor = getCategoryColor(e.category);
     return `
       <tr>
@@ -702,42 +702,42 @@ function openAddExpenseModal(prefill = {}) {
   const html = `
     <div class="form-group">
       <label class="form-label" for="exp-name">Expense name <span class="required">*</span></label>
-      <input type="text" id="exp-name" class="form-control" value="${esc(prefill.name||'')}" placeholder="e.g. Venue booking advance" required />
+      <input type="text" id="exp-name" class="form-control" value="${esc(prefill.name || '')}" placeholder="e.g. Venue booking advance" required />
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="exp-category">Category</label>
         <select id="exp-category" class="form-control">
-          ${['Venue','Catering','Decoration','Photography','Transport','Invitations','Guest support','Emergency','Other']
-            .map(c => `<option value="${c}" ${prefill.category===c?'selected':''}>${c}</option>`).join('')}
+          ${['Venue', 'Catering', 'Decoration', 'Photography', 'Transport', 'Invitations', 'Guest support', 'Emergency', 'Other']
+      .map(c => `<option value="${c}" ${prefill.category === c ? 'selected' : ''}>${c}</option>`).join('')}
         </select>
       </div>
       <div class="form-group">
         <label class="form-label" for="exp-amount">Amount (₹) <span class="required">*</span></label>
-        <input type="number" id="exp-amount" class="form-control" value="${esc(String(prefill.amount||''))}" placeholder="e.g. 25000" min="0" required />
+        <input type="number" id="exp-amount" class="form-control" value="${esc(String(prefill.amount || ''))}" placeholder="e.g. 25000" min="0" required />
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="exp-status">Status</label>
         <select id="exp-status" class="form-control">
-          ${['paid','promised','pending','optional']
-            .map(s => `<option value="${s}" ${prefill.status===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+          ${['paid', 'promised', 'pending', 'optional']
+      .map(s => `<option value="${s}" ${prefill.status === s ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`).join('')}
         </select>
       </div>
       <div class="form-group">
         <label class="form-label" for="exp-due">Due date</label>
-        <input type="date" id="exp-due" class="form-control" value="${esc(prefill.dueDate||'')}" />
+        <input type="date" id="exp-due" class="form-control" value="${esc(prefill.dueDate || '')}" />
       </div>
     </div>
     <div class="form-group">
       <label class="form-label" for="exp-notes">Notes</label>
-      <textarea id="exp-notes" class="form-control" rows="2" placeholder="Any extra details…">${esc(prefill.notes||'')}</textarea>
+      <textarea id="exp-notes" class="form-control" rows="2" placeholder="Any extra details…">${esc(prefill.notes || '')}</textarea>
     </div>
   `;
 
   openModal(title, html, () => {
-    const name   = sanitizeText(document.getElementById('exp-name').value, 200);
+    const name = sanitizeText(document.getElementById('exp-name').value, 200);
     const amount = parseFloat(document.getElementById('exp-amount').value);
     if (!name) { showToast('Please enter an expense name.', 'error'); return false; }
     if (isNaN(amount) || amount < 0) { showToast('Please enter a valid amount (0 or more).', 'error'); return false; }
@@ -803,9 +803,9 @@ function deleteExpense(id) {
  * Run What-If financial simulation calculations based on guest adjustments or cost variance inputs.
  */
 function runWhatIf() {
-  const extraGuests    = parseInt(document.getElementById('wi-guests').value) || 0;
-  const unexpectedExp  = parseFloat(document.getElementById('wi-expense').value) || 0;
-  const budgetReduction= parseFloat(document.getElementById('wi-budget-cut').value) || 0;
+  const extraGuests = parseInt(document.getElementById('wi-guests').value) || 0;
+  const unexpectedExp = parseFloat(document.getElementById('wi-expense').value) || 0;
+  const budgetReduction = parseFloat(document.getElementById('wi-budget-cut').value) || 0;
 
   if (extraGuests === 0 && unexpectedExp === 0 && budgetReduction === 0) {
     showToast('Enter at least one change to simulate.', 'warning');
@@ -822,7 +822,9 @@ function runWhatIf() {
       ${result.breakdown.map(b => `
         <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:4px">
           <span>${esc(b.label)}</span>
-          <strong style="color:var(--alert)">+${formatINR(b.amount)}</strong>
+          <strong style="color:${b.amount < 0 ? 'var(--emerald)' : 'var(--alert)'}">
+            ${b.amount < 0 ? '−' + formatINR(Math.abs(b.amount)) : '+' + formatINR(b.amount)}
+          </strong>
         </div>
       `).join('')}
       <div class="sep"></div>
@@ -854,9 +856,9 @@ function runWhatIf() {
 function renderTasks() {
   const filtered = taskFilter === 'all' ? currentTasks
     : taskFilter === 'completed' ? currentTasks.filter(t => t.status === 'completed')
-    : taskFilter === 'pending'   ? currentTasks.filter(t => t.status !== 'completed')
-    : taskFilter === 'urgent'    ? currentTasks.filter(t => t.priority === 'urgent' && t.status !== 'completed')
-    : currentTasks;
+      : taskFilter === 'pending' ? currentTasks.filter(t => t.status !== 'completed')
+        : taskFilter === 'urgent' ? currentTasks.filter(t => t.priority === 'urgent' && t.status !== 'completed')
+          : currentTasks;
 
   const container = document.getElementById('tasks-grid');
   if (filtered.length === 0) {
@@ -880,7 +882,7 @@ function renderTasks() {
  * @returns {string} HTML markup for task card
  */
 function renderTaskCard(t) {
-  const deadlineStr = t.deadline ? new Date(t.deadline).toLocaleDateString('en-IN', {day:'numeric',month:'short'}) : '—';
+  const deadlineStr = t.deadline ? new Date(t.deadline).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—';
   const isOverdue = t.deadline && t.status !== 'completed' && new Date(t.deadline) < new Date();
   return `
     <div class="card task-card ${t.status === 'completed' ? 'completed' : ''}" data-priority="${esc(t.priority)}" data-id="${esc(t.id)}">
@@ -889,8 +891,8 @@ function renderTaskCard(t) {
           <div class="task-name ${t.status === 'completed' ? 'done' : ''}">${esc(t.name)}</div>
           <div class="task-meta-row">
             ${t.category ? `<span class="task-meta-item">🏷 ${esc(t.category)}</span>` : ''}
-            ${t.owner    ? `<span class="task-meta-item">👤 ${esc(t.owner)}</span>` : ''}
-            ${t.backup   ? `<span class="task-meta-item">🔄 ${esc(t.backup)}</span>` : ''}
+            ${t.owner ? `<span class="task-meta-item">👤 ${esc(t.owner)}</span>` : ''}
+            ${t.backup ? `<span class="task-meta-item">🔄 ${esc(t.backup)}</span>` : ''}
             <span class="task-meta-item ${isOverdue ? 'text-danger' : ''}">📅 ${deadlineStr}${isOverdue ? ' (Overdue)' : ''}</span>
           </div>
         </div>
@@ -902,8 +904,8 @@ function renderTaskCard(t) {
       ${t.notes ? `<div class="text-small text-muted" style="margin-top:4px;padding-left:2px">${esc(t.notes)}</div>` : ''}
       <div class="task-actions">
         ${t.status !== 'completed'
-          ? `<button class="btn btn-success btn-sm" onclick="completeTask('${esc(t.id)}')">✓ Mark Complete</button>`
-          : `<button class="btn btn-ghost btn-sm" onclick="reopenTask('${esc(t.id)}')">↩ Reopen</button>`}
+      ? `<button class="btn btn-success btn-sm" onclick="completeTask('${esc(t.id)}')">✓ Mark Complete</button>`
+      : `<button class="btn btn-ghost btn-sm" onclick="reopenTask('${esc(t.id)}')">↩ Reopen</button>`}
         <button class="btn btn-ghost btn-sm" onclick="openEditTaskModal('${esc(t.id)}')">✏️ Edit</button>
         <button class="btn btn-ghost btn-sm" onclick="deleteTask('${esc(t.id)}')">🗑 Delete</button>
       </div>
@@ -970,39 +972,39 @@ function openAddTaskModal(prefill = {}) {
   const html = `
     <div class="form-group">
       <label class="form-label" for="task-name-inp">Task name <span class="required">*</span></label>
-      <input type="text" id="task-name-inp" class="form-control" value="${esc(prefill.name||'')}" placeholder="e.g. Confirm caterer" required />
+      <input type="text" id="task-name-inp" class="form-control" value="${esc(prefill.name || '')}" placeholder="e.g. Confirm caterer" required />
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="task-category-inp">Category</label>
-        <input type="text" id="task-category-inp" class="form-control" value="${esc(prefill.category||'')}" placeholder="e.g. Catering" />
+        <input type="text" id="task-category-inp" class="form-control" value="${esc(prefill.category || '')}" placeholder="e.g. Catering" />
       </div>
       <div class="form-group">
         <label class="form-label" for="task-priority-inp">Priority</label>
         <select id="task-priority-inp" class="form-control">
-          <option value="urgent" ${prefill.priority==='urgent'?'selected':''}>Urgent</option>
-          <option value="high"   ${prefill.priority==='high'?'selected':''}>High</option>
-          <option value="normal" ${(!prefill.priority||prefill.priority==='normal')?'selected':''}>Normal</option>
+          <option value="urgent" ${prefill.priority === 'urgent' ? 'selected' : ''}>Urgent</option>
+          <option value="high"   ${prefill.priority === 'high' ? 'selected' : ''}>High</option>
+          <option value="normal" ${(!prefill.priority || prefill.priority === 'normal') ? 'selected' : ''}>Normal</option>
         </select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="task-owner-inp">Owner</label>
-        <input type="text" id="task-owner-inp" class="form-control" value="${esc(prefill.owner||'')}" placeholder="e.g. Aman" />
+        <input type="text" id="task-owner-inp" class="form-control" value="${esc(prefill.owner || '')}" placeholder="e.g. Aman" />
       </div>
       <div class="form-group">
         <label class="form-label" for="task-backup-inp">Backup person</label>
-        <input type="text" id="task-backup-inp" class="form-control" value="${esc(prefill.backup||'')}" placeholder="e.g. Priya" />
+        <input type="text" id="task-backup-inp" class="form-control" value="${esc(prefill.backup || '')}" placeholder="e.g. Priya" />
       </div>
     </div>
     <div class="form-group">
       <label class="form-label" for="task-deadline-inp">Deadline</label>
-      <input type="date" id="task-deadline-inp" class="form-control" value="${esc(prefill.deadline||'')}" />
+      <input type="date" id="task-deadline-inp" class="form-control" value="${esc(prefill.deadline || '')}" />
     </div>
     <div class="form-group">
       <label class="form-label" for="task-notes-inp">Notes</label>
-      <textarea id="task-notes-inp" class="form-control" rows="2" placeholder="Any extra details…">${esc(prefill.notes||'')}</textarea>
+      <textarea id="task-notes-inp" class="form-control" rows="2" placeholder="Any extra details…">${esc(prefill.notes || '')}</textarea>
     </div>
   `;
 
@@ -1062,7 +1064,7 @@ function runExtractTasks() {
   const previewEl = document.getElementById('extract-preview');
   previewEl.style.display = 'block';
   previewEl.innerHTML = `
-    <div class="fw-bold mb-2" style="color:var(--maroon)">${extracted.length} task${extracted.length>1?'s':''} found — review before adding:</div>
+    <div class="fw-bold mb-2" style="color:var(--maroon)">${extracted.length} task${extracted.length > 1 ? 's' : ''} found — review before adding:</div>
     ${extracted.map((t, i) => `
       <div style="background:var(--white);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px;margin-bottom:8px">
         <input type="text" class="form-control mb-1" id="ext-name-${i}" value="${esc(t.name)}" placeholder="Task name" />
@@ -1108,7 +1110,7 @@ function confirmExtractedTasks(count) {
   document.getElementById('extract-preview').style.display = 'none';
   document.getElementById('extract-input').value = '';
   renderTasks();
-  showToast(`${added} task${added>1?'s':''} added successfully!`, 'success');
+  showToast(`${added} task${added > 1 ? 's' : ''} added successfully!`, 'success');
 }
 
 // ─── Timeline ─────────────────────────────────────────────────
@@ -1117,7 +1119,7 @@ function confirmExtractedTasks(count) {
  */
 function renderTimeline() {
   startCountdown();
-  const phases = ['30 days before','14 days before','7 days before','3 days before','1 day before','Event day','After event'];
+  const phases = ['30 days before', '14 days before', '7 days before', '3 days before', '1 day before', 'Event day', 'After event'];
   const grouped = {};
   phases.forEach(p => { grouped[p] = []; });
   currentTimeline.forEach(item => {
@@ -1151,7 +1153,7 @@ function renderTimeline() {
             <div class="timeline-dot"></div>
             <span class="timeline-task">${esc(item.task)}</span>
             ${item.owner ? `<span class="timeline-owner">👤 ${esc(item.owner)}</span>` : ''}
-            ${item.date  ? `<span class="timeline-date">${new Date(item.date).toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</span>` : ''}
+            ${item.date ? `<span class="timeline-date">${new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</span>` : ''}
             <button class="btn btn-ghost btn-sm" style="flex-shrink:0" onclick="toggleTimelineItem('${esc(item.id)}')">${item.status === 'completed' ? '↩ Undo' : '✓ Done'}</button>
             <button class="btn btn-ghost btn-sm btn-icon" onclick="deleteTimelineItem('${esc(item.id)}')" title="Delete" aria-label="Delete timeline item">🗑</button>
           </div>
@@ -1230,43 +1232,43 @@ function updateCountdown() {
   const now = new Date();
   const diff = target - now;
 
-  const daysEl   = document.getElementById('cd-days');
-  const hoursEl  = document.getElementById('cd-hours');
-  const minsEl   = document.getElementById('cd-mins');
-  const secsEl   = document.getElementById('cd-secs');
+  const daysEl = document.getElementById('cd-days');
+  const hoursEl = document.getElementById('cd-hours');
+  const minsEl = document.getElementById('cd-mins');
+  const secsEl = document.getElementById('cd-secs');
   const statusEl = document.getElementById('cd-status-badge');
-  const titleEl  = document.getElementById('cd-title');
+  const titleEl = document.getElementById('cd-title');
 
   if (titleEl && currentEvent.name) {
     titleEl.textContent = `Time Until ${currentEvent.name}`;
   }
 
   if (diff <= 0) {
-    if (daysEl)  daysEl.textContent  = '00';
+    if (daysEl) daysEl.textContent = '00';
     if (hoursEl) hoursEl.textContent = '00';
-    if (minsEl)  minsEl.textContent  = '00';
-    if (secsEl)  secsEl.textContent  = '00';
+    if (minsEl) minsEl.textContent = '00';
+    if (secsEl) secsEl.textContent = '00';
     if (statusEl) statusEl.textContent = '🎉 Celebration Day is here! Live Operations active.';
     return;
   }
-  const days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const secs  = Math.floor((diff % (1000 * 60)) / 1000);
+  const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-  if (daysEl)  daysEl.textContent  = String(days).padStart(2, '0');
+  if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
   if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
-  if (minsEl)  minsEl.textContent  = String(mins).padStart(2, '0');
-  if (secsEl)  secsEl.textContent  = String(secs).padStart(2, '0');
+  if (minsEl) minsEl.textContent = String(mins).padStart(2, '0');
+  if (secsEl) secsEl.textContent = String(secs).padStart(2, '0');
 
   if (statusEl) {
     statusEl.textContent = days > 7
       ? `⏳ ${days} days remaining • Core planning in progress`
       : days > 1
-      ? `⚡ Final week preparations • Vendor locks underway`
-      : days === 1
-      ? `🔥 Tomorrow is the celebration! Final setup in progress`
-      : `🌟 Hours away • Celebration Operations live`;
+        ? `⚡ Final week preparations • Vendor locks underway`
+        : days === 1
+          ? `🔥 Tomorrow is the celebration! Final setup in progress`
+          : `🌟 Hours away • Celebration Operations live`;
   }
 }
 
@@ -1354,7 +1356,7 @@ function renderVendorCard(v) {
         </div>
         <div class="vendor-detail-item">
           <span class="vendor-detail-label">Balance Due</span>
-          <span class="vendor-detail-value">${formatINR(Math.max(0, (v.quoted||0) - (v.advance||0)))}</span>
+          <span class="vendor-detail-value">${formatINR(Math.max(0, (v.quoted || 0) - (v.advance || 0)))}</span>
         </div>
       </div>
       <div class="progress-bar-wrap mb-1">
@@ -1362,7 +1364,7 @@ function renderVendorCard(v) {
       </div>
       <div class="text-small text-muted mb-1">${advancePct}% advance paid</div>
       ${v.backup ? `<div class="text-small text-muted mb-1">🔄 Backup: ${esc(v.backup)}</div>` : ''}
-      ${v.notes  ? `<div class="text-small text-muted mb-1">${esc(v.notes)}</div>` : ''}
+      ${v.notes ? `<div class="text-small text-muted mb-1">${esc(v.notes)}</div>` : ''}
       <div class="vendor-actions">
         ${!v.confirmed ? `<button class="btn btn-success btn-sm" onclick="confirmVendor('${esc(v.id)}')">✓ Confirm</button>` : ''}
         <button class="btn btn-ghost btn-sm" onclick="openEditVendorModal('${esc(v.id)}')">✏️ Edit</button>
@@ -1425,51 +1427,51 @@ function deleteVendor(id) {
 function openAddVendorModal(prefill = {}) {
   editingVendorId = prefill.id || null;
   const title = editingVendorId ? 'Edit Vendor' : 'Add Vendor';
-  const categories = ['Venue','Caterer','Decorator','Photographer','Transport','Sound & Lights','Makeup / Styling','Security / Medical','Other'];
+  const categories = ['Venue', 'Caterer', 'Decorator', 'Photographer', 'Transport', 'Sound & Lights', 'Makeup / Styling', 'Security / Medical', 'Other'];
 
   const html = `
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="v-name">Vendor name <span class="required">*</span></label>
-        <input type="text" id="v-name" class="form-control" value="${esc(prefill.name||'')}" placeholder="e.g. Annapurna Caterers" required />
+        <input type="text" id="v-name" class="form-control" value="${esc(prefill.name || '')}" placeholder="e.g. Annapurna Caterers" required />
       </div>
       <div class="form-group">
         <label class="form-label" for="v-category">Category</label>
         <select id="v-category" class="form-control">
-          ${categories.map(c => `<option value="${c}" ${prefill.category===c?'selected':''}>${c}</option>`).join('')}
+          ${categories.map(c => `<option value="${c}" ${prefill.category === c ? 'selected' : ''}>${c}</option>`).join('')}
         </select>
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="v-contact">Contact number</label>
-        <input type="tel" id="v-contact" class="form-control" value="${esc(prefill.contact||'')}" placeholder="e.g. 9876543210" />
+        <input type="tel" id="v-contact" class="form-control" value="${esc(prefill.contact || '')}" placeholder="e.g. 9876543210" />
       </div>
       <div class="form-group">
         <label class="form-label" for="v-quoted">Quoted amount (₹)</label>
-        <input type="number" id="v-quoted" class="form-control" value="${esc(String(prefill.quoted||''))}" placeholder="e.g. 50000" min="0" />
+        <input type="number" id="v-quoted" class="form-control" value="${esc(String(prefill.quoted || ''))}" placeholder="e.g. 50000" min="0" />
       </div>
     </div>
     <div class="form-row">
       <div class="form-group">
         <label class="form-label" for="v-advance">Advance paid (₹)</label>
-        <input type="number" id="v-advance" class="form-control" value="${esc(String(prefill.advance||''))}" placeholder="e.g. 10000" min="0" />
+        <input type="number" id="v-advance" class="form-control" value="${esc(String(prefill.advance || ''))}" placeholder="e.g. 10000" min="0" />
       </div>
       <div class="form-group">
         <label class="form-label" for="v-backup">Backup vendor</label>
-        <input type="text" id="v-backup" class="form-control" value="${esc(prefill.backup||'')}" placeholder="Name + contact" />
+        <input type="text" id="v-backup" class="form-control" value="${esc(prefill.backup || '')}" placeholder="Name + contact" />
       </div>
     </div>
     <div class="form-group">
       <label class="form-label" for="v-notes">Notes</label>
-      <textarea id="v-notes" class="form-control" rows="2">${esc(prefill.notes||'')}</textarea>
+      <textarea id="v-notes" class="form-control" rows="2">${esc(prefill.notes || '')}</textarea>
     </div>
   `;
 
   openModal(title, html, () => {
     const name = document.getElementById('v-name').value.trim();
     if (!name) { showToast('Please enter a vendor name.', 'error'); return false; }
-    const quoted  = parseFloat(document.getElementById('v-quoted').value)  || 0;
+    const quoted = parseFloat(document.getElementById('v-quoted').value) || 0;
     const advance = parseFloat(document.getElementById('v-advance').value) || 0;
     if (advance > quoted && quoted > 0) { showToast('Advance cannot exceed quoted amount.', 'error'); return false; }
 
@@ -1478,10 +1480,10 @@ function openAddVendorModal(prefill = {}) {
       eventId: currentEvent.id,
       name,
       category: document.getElementById('v-category').value,
-      contact:  document.getElementById('v-contact').value.trim(),
+      contact: document.getElementById('v-contact').value.trim(),
       quoted, advance,
       backup: document.getElementById('v-backup').value.trim(),
-      notes:  document.getElementById('v-notes').value.trim(),
+      notes: document.getElementById('v-notes').value.trim(),
       confirmed: prefill.confirmed || false,
       createdAt: new Date().toISOString(),
     };
@@ -1511,14 +1513,14 @@ function openEditVendorModal(id) {
 
 // ─── Crisis Switch ────────────────────────────────────────────
 const CRISIS_OPTIONS = [
-  { key: 'caterer_delayed', icon: '🍽️', label: 'Caterer Delayed',       desc: 'Food is running late' },
-  { key: 'vendor_cancelled',icon: '❌', label: 'Vendor Cancelled',       desc: 'A key vendor backed out' },
-  { key: 'heavy_rain',      icon: '🌧️', label: 'Heavy Rain Expected',    desc: 'Weather disruption' },
-  { key: 'power_failure',   icon: '⚡', label: 'Electricity Failure',    desc: 'Power outage at venue' },
-  { key: 'extra_guests',    icon: '👥', label: 'More Guests Arrived',    desc: 'More than expected' },
-  { key: 'budget_reduced',  icon: '💸', label: 'Budget Reduced',         desc: 'Funds are short' },
-  { key: 'vip_late',        icon: '⏰', label: 'Important Guest is Late','desc': 'Key person delayed' },
-  { key: 'custom',          icon: '🚨', label: 'Custom Emergency',       desc: 'Something else happened' },
+  { key: 'caterer_delayed', icon: '🍽️', label: 'Caterer Delayed', desc: 'Food is running late' },
+  { key: 'vendor_cancelled', icon: '❌', label: 'Vendor Cancelled', desc: 'A key vendor backed out' },
+  { key: 'heavy_rain', icon: '🌧️', label: 'Heavy Rain Expected', desc: 'Weather disruption' },
+  { key: 'power_failure', icon: '⚡', label: 'Electricity Failure', desc: 'Power outage at venue' },
+  { key: 'extra_guests', icon: '👥', label: 'More Guests Arrived', desc: 'More than expected' },
+  { key: 'budget_reduced', icon: '💸', label: 'Budget Reduced', desc: 'Funds are short' },
+  { key: 'vip_late', icon: '⏰', label: 'Important Guest is Late', 'desc': 'Key person delayed' },
+  { key: 'custom', icon: '🚨', label: 'Custom Emergency', desc: 'Something else happened' },
 ];
 
 /**
@@ -1638,7 +1640,7 @@ function renderRescuePlan(plan) {
           </div>
         `).join('')}
         <div style="font-size:0.85rem;color:var(--ink);font-weight:700;margin-top:8px;text-align:right">
-          Total Emergency Allocation: ${formatINR(plan.budgetImpact.reduce((s,b)=>s+b.amount,0))}
+          Total Emergency Allocation: ${formatINR(plan.budgetImpact.reduce((s, b) => s + b.amount, 0))}
         </div>
       </div>` : ''}
 
@@ -1721,7 +1723,7 @@ function applyRescuePlan() {
   // Save incident
   saveAsIncident();
 
-  showToast(`Rescue plan applied! ${tasksAdded} task${tasksAdded!==1?'s':''} and ${expensesAdded} expense${expensesAdded!==1?'s':''} added.`, 'success', 5000);
+  showToast(`Rescue plan applied! ${tasksAdded} task${tasksAdded !== 1 ? 's' : ''} and ${expensesAdded} expense${expensesAdded !== 1 ? 's' : ''} added.`, 'success', 5000);
 
   // Confirmation message
   const outputEl = document.getElementById('rescue-plan-output');
@@ -1806,20 +1808,20 @@ function renderIncidents() {
   list.innerHTML = currentIncidents.slice().reverse().map(inc => `
     <div class="incident-card card">
       <div class="incident-title">${esc(inc.title)}</div>
-      <div class="incident-meta">${new Date(inc.savedAt).toLocaleString('en-IN')} &bull; ${esc(inc.situation.substring(0,80))}…</div>
+      <div class="incident-meta">${new Date(inc.savedAt).toLocaleString('en-IN')} &bull; ${esc(inc.situation.substring(0, 80))}…</div>
     </div>
   `).join('');
 }
 
 // ─── Message Studio ───────────────────────────────────────────
 const MESSAGE_TYPES = [
-  { key: 'vendor_reminder',      label: 'Vendor Reminder',       icon: '🔔' },
-  { key: 'guest_invitation',     label: 'Guest Invitation',      icon: '💌' },
-  { key: 'delay_notification',   label: 'Delay Notification',    icon: '⏰' },
-  { key: 'volunteer_assignment', label: 'Volunteer Assignment',  icon: '🙋' },
-  { key: 'payment_reminder',     label: 'Payment Reminder',      icon: '💰' },
-  { key: 'thankyou',             label: 'Thank-You Message',     icon: '❤️' },
-  { key: 'emergency_announcement',label:'Emergency Announcement',icon: '🚨' },
+  { key: 'vendor_reminder', label: 'Vendor Reminder', icon: '🔔' },
+  { key: 'guest_invitation', label: 'Guest Invitation', icon: '💌' },
+  { key: 'delay_notification', label: 'Delay Notification', icon: '⏰' },
+  { key: 'volunteer_assignment', label: 'Volunteer Assignment', icon: '🙋' },
+  { key: 'payment_reminder', label: 'Payment Reminder', icon: '💰' },
+  { key: 'thankyou', label: 'Thank-You Message', icon: '❤️' },
+  { key: 'emergency_announcement', label: 'Emergency Announcement', icon: '🚨' },
 ];
 
 /**
@@ -1857,13 +1859,13 @@ function selectMessageType(key) {
  */
 function doGenerateMessage() {
   if (!selectedMessageType) { showToast('Please select a message type first.', 'warning'); return; }
-  const lang    = document.getElementById('msg-language').value;
+  const lang = document.getElementById('msg-language').value;
   const recipient = document.getElementById('msg-recipient').value.trim();
   const details = document.getElementById('msg-details').value.trim();
 
   const data = {
     eventName: currentEvent?.name || 'our event',
-    eventDate: currentEvent ? new Date(currentEvent.date).toLocaleDateString('en-IN', {day:'numeric',month:'long',year:'numeric'}) : '',
+    eventDate: currentEvent ? new Date(currentEvent.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '',
     city: currentEvent?.city || '',
     organiser: currentEvent?.name || 'The Organiser',
     recipient,
@@ -1910,14 +1912,14 @@ function renderSettings() {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:0.88rem">
       <div><strong>Name:</strong> ${esc(e.name)}</div>
       <div><strong>Type:</strong> ${esc(e.type)}</div>
-      <div><strong>Date:</strong> ${new Date(e.date).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})}</div>
+      <div><strong>Date:</strong> ${new Date(e.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
       <div><strong>City:</strong> ${esc(e.city)}</div>
       <div><strong>Guests:</strong> ${esc(String(e.guests))}</div>
       <div><strong>Budget:</strong> ${formatINR(e.budget)}</div>
       <div><strong>Food:</strong> ${esc(e.food)}</div>
       <div><strong>Language:</strong> ${esc(e.language)}</div>
       <div><strong>Volunteers:</strong> ${esc(String(e.volunteers))}</div>
-      <div><strong>Accessibility:</strong> ${(e.accessibility||[]).join(', ') || 'None'}</div>
+      <div><strong>Accessibility:</strong> ${(e.accessibility || []).join(', ') || 'None'}</div>
     </div>
   `;
 }
@@ -1929,11 +1931,11 @@ function exportData() {
   const data = {
     sahaay_version: '1.0',
     exported_at: new Date().toISOString(),
-    event:     currentEvent,
-    expenses:  currentExpenses,
-    tasks:     currentTasks,
-    vendors:   currentVendors,
-    timeline:  currentTimeline,
+    event: currentEvent,
+    expenses: currentExpenses,
+    tasks: currentTasks,
+    vendors: currentVendors,
+    timeline: currentTimeline,
     incidents: currentIncidents,
   };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1964,11 +1966,11 @@ function importData(file) {
         'Import Event Data',
         `This will replace all current data with the imported data for "${esc(data.event.name)}". Continue?`,
         () => {
-          if (data.event)     { currentEvent = data.event;         Store.set(KEYS.EVENT, data.event); }
-          if (data.expenses)  { currentExpenses = data.expenses;   saveExpenses(); }
-          if (data.tasks)     { currentTasks = data.tasks;         saveTasks(); }
-          if (data.vendors)   { currentVendors = data.vendors;     saveVendors(); }
-          if (data.timeline)  { currentTimeline = data.timeline;   saveTimeline(); }
+          if (data.event) { currentEvent = data.event; Store.set(KEYS.EVENT, data.event); }
+          if (data.expenses) { currentExpenses = data.expenses; saveExpenses(); }
+          if (data.tasks) { currentTasks = data.tasks; saveTasks(); }
+          if (data.vendors) { currentVendors = data.vendors; saveVendors(); }
+          if (data.timeline) { currentTimeline = data.timeline; saveTimeline(); }
           if (data.incidents) { currentIncidents = data.incidents; saveIncidents(); }
           updateTopbar();
           updateSidebarInfo();
@@ -2013,9 +2015,9 @@ function resetAllData() {
 function buildNotifications() {
   const notifs = [];
   const urgentTasks = currentTasks.filter(t => t.status !== 'completed' && t.priority === 'urgent');
-  if (urgentTasks.length > 0) notifs.push({ title: `${urgentTasks.length} urgent task${urgentTasks.length>1?'s':''}`, body: urgentTasks[0].name });
+  if (urgentTasks.length > 0) notifs.push({ title: `${urgentTasks.length} urgent task${urgentTasks.length > 1 ? 's' : ''}`, body: urgentTasks[0].name });
   const unconfirmedVendors = currentVendors.filter(v => !v.confirmed);
-  if (unconfirmedVendors.length > 0) notifs.push({ title: `${unconfirmedVendors.length} vendor${unconfirmedVendors.length>1?'s':''} unconfirmed`, body: unconfirmedVendors[0].name || 'Check vendor checklist' });
+  if (unconfirmedVendors.length > 0) notifs.push({ title: `${unconfirmedVendors.length} vendor${unconfirmedVendors.length > 1 ? 's' : ''} unconfirmed`, body: unconfirmedVendors[0].name || 'Check vendor checklist' });
   const stats = calcBudgetStats(currentEvent, currentExpenses);
   if (stats.overBudget) notifs.push({ title: 'Budget alert', body: 'Your committed expenses exceed the total budget.' });
 
@@ -2402,27 +2404,27 @@ function initEventListeners() {
 }
 
 // ─── Global functions (called from inline onclick) ────────────
-window.completeTask      = completeTask;
-window.reopenTask        = reopenTask;
-window.deleteTask        = deleteTask;
+window.completeTask = completeTask;
+window.reopenTask = reopenTask;
+window.deleteTask = deleteTask;
 window.openEditTaskModal = openEditTaskModal;
-window.openAddTaskModal  = openAddTaskModal;
+window.openAddTaskModal = openAddTaskModal;
 window.confirmExtractedTasks = confirmExtractedTasks;
 window.openEditExpenseModal = openEditExpenseModal;
-window.openAddExpenseModal  = openAddExpenseModal;
-window.deleteExpense     = deleteExpense;
-window.confirmVendor     = confirmVendor;
-window.copyContact       = copyContact;
-window.deleteVendor      = deleteVendor;
+window.openAddExpenseModal = openAddExpenseModal;
+window.deleteExpense = deleteExpense;
+window.confirmVendor = confirmVendor;
+window.copyContact = copyContact;
+window.deleteVendor = deleteVendor;
 window.openEditVendorModal = openEditVendorModal;
-window.openAddVendorModal  = openAddVendorModal;
-window.selectCrisis      = selectCrisis;
-window.applyRescuePlan   = applyRescuePlan;
-window.copyGuestMessage  = copyGuestMessage;
-window.saveAsIncident    = saveAsIncident;
-window.resetCrisis       = resetCrisis;
+window.openAddVendorModal = openAddVendorModal;
+window.selectCrisis = selectCrisis;
+window.applyRescuePlan = applyRescuePlan;
+window.copyGuestMessage = copyGuestMessage;
+window.saveAsIncident = saveAsIncident;
+window.resetCrisis = resetCrisis;
 window.selectMessageType = selectMessageType;
-window.navigateTo        = navigateTo;
+window.navigateTo = navigateTo;
 window.toggleTimelineItem = toggleTimelineItem;
 window.deleteTimelineItem = deleteTimelineItem;
 
